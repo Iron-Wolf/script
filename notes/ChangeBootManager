@@ -1,0 +1,44 @@
+Date : Avril 2015
+-------------------------------------------------------------
+
+But    : autoriser le boot via usb, si non supporté par le Bios
+
+Outils : Plop Boot Manager
+OS     : Debian (avec GRUB2)
+
+-------------------------------------------------------------
+INFO : http://www.plop.at/en/bootmanager/mbrinstall.html
+
+Télécharger le ZIP plpbt-x.x.x.zip sur le site officiel : http://www.plop.at/en/bootmanager/download.html
+Le programme d'installation est le suivant : install/plpinstc.com
+Copier le dans /boot
+
+Puis modifier le fichier /etc/grub.d/40_custom (uniquement valable pour Grub2) :
+    #!/bin/sh
+    exec tail -n +3 $0
+    	
+    menuentry "Install Plop Boot Manager" {
+        set root='(hd0,1)'
+        linux16 /boot/plpinstc.com
+    }
+
+
+Enfin, lancer la commande "update-grub2" ou "update-grub"
+--------------------------------------------------------------------
+INFO : http://www.av8n.com/computer/htm/grub-reinstall.htm#sec-first-boot
+
+Pour réinstaller GRUB sur le MBR, démarrer le pc avec un Live CD / Live USB.
+Avoir la liste des disques : cd /dev/disk/by-label; ls -al
+Créer un dossier et monter la partition voulue
+    mkdir /x
+    mount /dev/sdaX /x
+    (Test : ls -al /x/boot/...)
+
+Pour démonter la partition si pas la bonne : umount /x
+
+Une fois la bonne partition montée, utiliser : grub-install --root-directory=/x /dev/sda
+Ne pas indiquer de chiffre après "sda". Cela peut créer des comportements inatendu.
+
+
+
+
