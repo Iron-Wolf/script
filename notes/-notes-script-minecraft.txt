@@ -1,0 +1,56 @@
+#get pid
+ps -C 'java -Xmx1500M' -o pid=
+
+---------------------------------------------
+
+#get process (use "-q" for quiet mode)
+ps -ef | grep java | grep Xmx &>/dev/null (or -q option)
+ps -ef | grep java | grep -v grep
+
+#more elegant way
+ps -ef | grep '[m]inecraft_server.1.8.jar'
+
+#test ( 0 = OK; 1 = Error )
+echo $?
+
+---------------------------------------------
+
+#launch minecraft (avec ecrasement des logs)
+java -Xmx1500M -Xms1500M -jar $HOME/Documents/serveur_1.8/minecraft_server.1.8.jar nogui > logfile &
+
+#launch minecraft with JMX remote connexion
+java -Djava.rmi.server.hostname=(get host ip in the script) \
+-Dcom.sun.management.jmxremote.port=3000 \
+-Dcom.sun.management.jmxremote.authenticate=false \
+-Dcom.sun.management.jmxremote.ssl=false \
+-Xmx1500M -Xms1500M \
+-jar $HOME/Documents/serveur_1.8/minecraft_server.1.8.jar nogui > $HOME/Documents/serveur_1.8/logs/running.log &
+
+=============================================
+
+#édition du grub ubuntu pour démarrer en mode texte
+fichier : /etc/default/grub
+éditer : GRUB_CMDLINE_LINUX=""
+màj config : update-grub
+
+=============================================
+
+#changer passwd root
+Boot local : "Recovery Mode" ou "Single-User Mode"
+loger en tant que root, ne demande pas l'ancien mot de passe
+
+=============================================
+
+Start cron : update-rc.d cron defaults
+
+/etc/rc0.d/K10myscript
+/etc/rc1.d/K10myscript
+/etc/rc6.d/K10myscript
+
+/etc/rc2.d/S10myscript
+/etc/rc3.d/S10myscript
+/etc/rc4.d/S10myscript
+/etc/rc5.d/S10myscript
+
+ln -s /path/to/script.sh /etc/rc2.d/S10myscript
+ln -s /path/to/script.sh /etc/rc2.d/K10myscript
