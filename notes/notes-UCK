@@ -1,0 +1,111 @@
+
+	+-----------+
+	| Notes UCK |
+	+-----------+
+
+Objectif : modification d'une distrib Ubuntu avec UCK
+
+======
+
+Chargement de l'iso, via UCK (ubuntu) :
+
+sudo uck-remaster-unpack-iso ubuntu-mini-remix.iso;
+sudo uck-remaster-unpack-rootfs;
+sudo uck-remaster-unpack-initrd;
+sudo uck-remaster-chroot-rootfs;
+
+====
+
+
+L'iso est monté sur le FileSystem.
+On configure les packages de bases (ajout de universe et multiverse) :
+
+nano /etc/apt/sources.list;
+deb http://archive.ubuntu.com/ubuntu/ wily main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu/ wily-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ wily-updates main restricted universe multiverse
+
+apt-get update && apt-get upgrade;
+
+
+
+Le système est configuré et à jour, on ajoute les packages que l'on veut.
+Par exemple une interface graphique :
+
+sudo apt-get install ubuntu-desktop; #gnome
+sudo apt-get install xubuntu-desktop; #xfce
+sudo apt-get install lubuntu-desktop; #lxde
+sudo apt-get install kubuntu-desktop; #KDE
+
+
+Pour installer un desktop sans les addons (libre office, etc) :
+
+sudo apt-get install ubuntu-desktop --no-install-recommends;
+
+----
+installation de phpmyadmin en dernière version : 
+sudo git clone --depth=1 --branch=STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin
+
+fichier /etc/apache2/site-available/000default :
+	Alias /phpmyadmin "/usr/share/phpmyadmin/"
+	<Directory "/usr/share/phpmyadmin/">
+     	Order allow,deny
+     	Allow from all
+     	Require all granted
+	</Directory>
+
+restart du serveur
+
+
+ajoute un mot de passe à mysql : 
+mysqladmin -u root password NEWPASSWORD
+
+(php-mbstring)
+
+----
+installation eclipse :
+tar -zxvf eclipse.XX.YY.tar.gz
+sudo mv eclipse.XX.YY /usr/share
+
+gedit eclipse.desktop
+
+[Desktop Entry]
+Name=Eclipse 
+Type=Application
+Exec=env UBUNTU_MENUPROXY=0 eclipse44
+Terminal=false
+Icon=eclipse
+Comment=Integrated Development Environment
+NoDisplay=false
+Categories=Development;IDE;
+Name[en]=Eclipse
+
+sudo desktop-file-install eclipse.desktop
+sudo ln -s /usr/share/eclipse/eclipse /usr/local/bin/eclipse
+sudo cp /usr/share/eclipse/icon.xpm /usr/share/pixmaps/eclipse.xpm
+
+====
+
+
+
+Une fois les install finies, on quitte et on crée l'iso :
+
+exit;
+
+sudo uck-remaster-pack-initrd;
+sudo uck-remaster-pack-rootfs;
+sudo uck-remaster-pack-iso maDistrib.iso;
+
+
+L'iso se trouve dans le dossier :
+/home/user/tmp/remaster-new-files
+
+
+
+Lien : http://mashudicastol.blogspot.fr/2013/11/remaster-ubuntu-mini-remix-1204lts.html
+
+
+
+---
+ubuntu-gnome-desktop
+
