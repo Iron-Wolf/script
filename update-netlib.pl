@@ -6,7 +6,7 @@ use v5.14;
 use MIME::Base64 qw(encode_base64);
 
 # the website sending your current IP address
-our $checkip = "http://echoip.com/";
+our $checkip = "http://t.karchnu.fr/ip.php";
 
 # Domain name of the service provider (like netlib.re)
 our $nddservice = "netlib.re";
