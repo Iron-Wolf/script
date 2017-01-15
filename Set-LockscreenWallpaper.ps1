@@ -1,4 +1,4 @@
-﻿# Script used to change the lock screen wallpaper on windows 10
+# Script used to change the lock screen wallpaper on windows 10
 # with random image from a given directory.
 # 
 # Schedule the task with the Windows Task Scheduler :
@@ -7,7 +7,7 @@
 # function 'Set-LockscreenWallpaper' written by :
 # https://github.com/Sauler/PowershellUtils
 #
-# Dependency : PoshWinRT.dll (see the github repo)
+# Dependency : PoshWinRT.dll (https://github.com/rkeithhill/PoshWinRT)
 
 
 function Set-LockscreenWallpaper($path) {
