@@ -8,6 +8,16 @@
 # https://github.com/Sauler/PowershellUtils
 #
 # Dependency : PoshWinRT.dll (https://github.com/rkeithhill/PoshWinRT)
+#
+# ============================================
+# Configuration
+# - change lock screen properties to "image" in windows settings
+# - allow script execution : Set-ExecutionPolicy Unrestricted
+# - in the task scheduler
+#    - program/script : PowerShell
+#    - args           : .\Set-LockscreenWallpaper.ps1
+#    - start in       : C:\my\folder
+# ============================================
 
 
 function Set-LockscreenWallpaper($path) {
