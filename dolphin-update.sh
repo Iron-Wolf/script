@@ -39,6 +39,7 @@
 #
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+build_threads=$(( $(nproc) + 1 ))
 
 getdolphin() {
   echo 'Downloading Dolphin...'
@@ -53,7 +54,7 @@ updatedolphin() {
 
 build() {
   cmake $DIR/dolphin -DENABLE_QT2=true
-  make
+  make -j $build_threads
 }
 
 updatedolphin || getdolphin
