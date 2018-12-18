@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<!-- Simple web page displaying chart from Idealo's website -->
+<html>
+  <head>
+    <meta charset="UTF-8"/> 
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="http://www.ajax-cross-origin.com/js/jquery.ajax-cross-origin.min.js"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script type="text/javascript" src="https://momentjs.com/downloads/moment.min.js"></script>
+    <script type="text/javascript">
+      // fonctions found here : https://plainjs.com/javascript/manipulation/insert-an-element-after-or-before-another-32/
+      function insertAfter(el, referenceNode) {
+        referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
+      }
+      function insertBefore(el, referenceNode) {
+        referenceNode.parentNode.insertBefore(el, referenceNode);
+      }
+
+      // see test perf here : https://jsperf.com/alternative-isfunction-implementations
+      function isFunction(object) {
+        return !!(object && object.constructor && object.call && object.apply);
+      }
+
+      // containerId : html identifier
+      // productId  : Idealo's id of the product
+      // chartTitle  : title of the chart
+      // callback    : function to call after processing
+      function insertChart(containerId, productId, chartTitle, callback){
+
+        // Url construction
+        var baseWebsite = "https://www.idealo.fr";
+        var apiPath = "/offerpage/pricechart/api/";
+        var productPagePath = "/prix/"
+        var timeframe = "?period=P3M";
+        var apiUrl = baseWebsite + apiPath + productId + timeframe;
+        var productUrl = baseWebsite + productPagePath + productId;
+        
+        // div containing the chart
+        var chartEl = document.createElement('div');
+        chartEl.id = containerId;
+        chartEl.style.height = "10em";
+        chartEl.style.width = "50%";
+        chartEl.style.margin = "2em";
+        chartEl.style.display = "inline-block";
+        chartEl.onclick = function() {
+          window.open(productUrl);
+        };
+
+        // side div with aditionnal informations
+        var infoEl = document.createElement('div');
+        infoEl.style.display = "inline-block";
+        infoEl.style.verticalAlign = "top";
+        infoEl.style.margin = "3em 0 0 0";
+
+        var infoEl_desc = document.createElement('div');
+        infoEl_desc.innerHTML = "Product : ";
+        infoEl.appendChild(infoEl_desc);
+        
+        var infoEl_img = document.createElement('img');
+        infoEl_img.src = "http://cdn.idealo.com/folder/Product/5144/0/" + productId + "/s4_produktbild_klein/p.jpg";
+        infoEl.appendChild(infoEl_img);
+
+        var wrapperEl = document.createElement('div');
+        wrapperEl.appendChild(chartEl);
+        wrapperEl.appendChild(infoEl);
+
+        // insert new element after the span
+        var ref = document.querySelector('span#hook');
+        insertAfter(wrapperEl, ref);
+
+        // initialize chart using CanvasJS
+        var dataPoints = [];
+        var chart = new CanvasJS.Chart(containerId,{
+          title:{
+            text: chartTitle
+	        },
+          axisY:{
+            includeZero: false
+          },
+          data: [{
+            type: "line",
+            toolTipContent: "<span style='color:#4F81BC;'>{x}:</span> {y} €",
+            dataPoints : dataPoints,
+	        }]
+        });
+
+        // ===== PROXY METHOD ===== //
+        // It is good specify the charset you expect.
+        // You can use the charset you want instead of utf-8.
+        // See details for scriptCharset and contentType options: 
+        // http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
+        /*
+        $.ajaxSetup({
+            scriptCharset: "utf-8", //or "ISO-8859-1"
+            contentType: "application/json; charset=utf-8"
+        });
+
+        $.getJSON('http://whateverorigin.org/get?url=' + 
+            encodeURIComponent('https://www.idealo.fr/offerpage/pricechart/api/5212235?period=P3M') + '&callback=?',
+            function (data) {
+                console.log("> ", data);
+                
+                //If the expected response is JSON
+                var response = $.parseJSON(data.contents);
+                console.log(response);
+        });
+        */
+        
+        // ===== JQUERY PLUGIN ===== //
+        // request data and fill the chart
+        $.ajax({
+          crossOrigin: true,
+          url: apiUrl,
+          success: function(data) {
+            var response = $.parseJSON(data);
+            var counter = 1;
+
+            $.each(response.data, function(i, item){
+              // get X value from Json
+              //console.log(counter++ + " / " + response.data[i].x + " / " + item.x);
+              
+              // parse date and cast it to a Date object
+              var curDate = moment(item.x, "YYYY-MM-DD");
+              var dateForChart = new Date(curDate.year(), curDate.month(), curDate.date());
+              
+              // fill chart with Y values
+              dataPoints.push({x: dateForChart, y: item.y});
+            });
+            
+            chart.render();
+            
+            // notify end loading
+            if (callback!== null && isFunction(callback))
+              callback();
+          }
+        });
+      }
+
+      window.onload = function () {
+        insertChart("chartContainer", "5112315", "QNAP TurboStation TS-251A-2G");
+        insertChart("chartContainer2", "5768308", "Seagate IronWolf 6TB (ST6000VN0033)");
+        insertChart("chartContainer3", "5144090", "Seagate IronWolf 6To (ST6000VN0041)",
+          function(){
+            $('h1').html(""); //end loading
+          });
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1>loading</h1>
+    <span id="hook"></span>
+  </body>
+</html>
+
