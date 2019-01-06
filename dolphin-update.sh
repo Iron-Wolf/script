@@ -48,6 +48,9 @@
 # - generate the package with : Name = dolphin-emu / Version = major number / Release = minor number
 # - install the package with dpkg
 #
+# Don't forget to hold the package in apt, otherwise, it will be replaced the next time the system is updated :
+# - apt-mark hold dolphin-emu
+#
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 build_threads=$(( $(nproc) + 1 ))
