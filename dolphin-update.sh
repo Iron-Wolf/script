@@ -37,6 +37,17 @@
 # Config File : .config/dolphin-emu
 # Instal File : /usr/local/share/dolphin-emu
 #
+#
+# +-------------------------+
+# | Build with checkinstall |
+# +-------------------------+
+#
+# Once Dolphin is build, cancel installation and use checkinstall :
+# - go in the build directory
+# - use 'sudo checkinstall --install=no' to customize the package
+# - generate the package with : Name = dolphin-emu / Version = major number / Release = minor number
+# - install the package with dpkg
+#
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 build_threads=$(( $(nproc) + 1 ))
@@ -50,9 +61,13 @@ updatedolphin() {
   cd $DIR/dolphin
   echo 'Updating the local repository...'
   git pull origin
+  # you can also 'git checkout <id>' to get a specific version
 }
 
 build() {
+  # If needed, export env variables
+  # export CC=/usr/bin/gcc
+  # export CXX=/usr/bin/g++
   cmake $DIR/dolphin -DENABLE_QT2=true
   make -j $build_threads
 }
