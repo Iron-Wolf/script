@@ -50,11 +50,22 @@
 #
 # Don't forget to hold the package in apt, otherwise, it will be replaced the next time the system is updated :
 # - apt-mark hold dolphin-emu
+# - apt-mark showhold
 #
 
+
+# Global Variable
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 build_threads=$(( $(nproc) + 1 ))
+install_cmd="checkinstall --install=no --showinstall=no --default \
+  --pkgname=dolphin-emu \
+  --pkgversion=5.0 \
+  --pkgrelease=10506 \
+  --pkgarch=amd64 \
+  --maintainer=iw \
+  --backup=no"
 
+# Methods
 getdolphin() {
   echo 'Downloading Dolphin...'
   git clone https://github.com/dolphin-emu/dolphin.git
@@ -75,6 +86,8 @@ build() {
   make -j $build_threads
 }
 
+
+# Start script
 updatedolphin || getdolphin
 mkdir $DIR/build
 cd $DIR/build
@@ -84,8 +97,7 @@ echo 'Proceeding to the installation; press Enter to continue or Ctrl+C to cance
 read
 if [ $(whoami) == "root" ];
   then
-    make install
+    $install_cmd
   else
-    sudo make install
+    sudo $install_cmd
 fi
-
