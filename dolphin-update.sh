@@ -8,14 +8,27 @@
 # then compiles it and finally installs it. 
 # It is somewhat interactive and distro-independent.
 #
-# Execute the script from anywhere, by running sh /path/to/the/script.sh
+# Execute the script from anywhere, by running : sh /path/to/the/script.sh
 #
 # https://wiki.dolphin-emu.org/index.php?title=Building_Dolphin_on_Linux#Addendum_A
 #
 #
+# +--------------+
+# | Dependencies |
+# +--------------+
+#
+# git : to checkout the source code
+# checkinstall : to build ".deb" package
+#
+#
 # +-------------------+
-# | Qt5 specification |
+# | Qt5 specification | /!\ No longer needed /!\
 # +-------------------+
+#
+# As the implementation of Qt has matured, it is now used by default
+# and is included in the project. This means that we no longer need
+# to download Qt to build dolphin.
+# I leave theses instructions here if needed.
 #
 # When building :
 #   Add Qt binaries path to the PATH env variable : 
@@ -42,15 +55,16 @@
 # | Build with checkinstall |
 # +-------------------------+
 #
-# Once Dolphin is build, cancel installation and use checkinstall :
-# - go in the build directory
-# - use 'sudo checkinstall --install=no' to customize the package
+# Once Dolphin is build, we use checkinstall :
+# - used in the build directory
+# - option '--install=no' is used to not install the package by default
 # - generate the package with : Name = dolphin-emu / Version = major number / Release = minor number
-# - install the package with dpkg
+# - install it with 'dpkg -i'
 #
-# Don't forget to hold the package in apt, otherwise, it will be replaced the next time the system is updated :
-# - apt-mark hold dolphin-emu
-# - apt-mark showhold
+# Don't forget to hold the package in apt. Otherwise, 
+# it will be replaced the next time the system is updated :
+#   $ apt-mark hold dolphin-emu
+#   $ apt-mark showhold
 #
 
 
