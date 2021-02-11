@@ -2,22 +2,40 @@
 ; | DESCRIPTION |
 ; +-------------+
 ;
+; This script remap some mouse buttons to perform scroll action instead.
+; Motivation : a broken scroll wheel on my mouse.
+;
+; Remap config :
+;   XButton1 (side button) -> scroll down
+;   XButton2 (side button) -> scroll up
+;
+; Usage : - click on XButton1/2 trigger a scroll
+;         - if button is held, the script wait a short period of time
+;           then endlessly trigger a scroll in the same direction
+;         - When the button is released, the scroll is stopped
+;
+;
+; +--------------+
+; | TROUBLESHOOT |
+; +--------------+
+; Initialy used "SendMode Input" but this buffer any input during the send action.
+; This result in some buggy behaviour (button maintained even though the button is
+; physicaly released).
+; Aditionnaly, "Send" has to be used in Blind mode to avoid releasing hotkeys (Ctrl/Shift/...)
+; Example : Send {Blind}{WheelDown}
+
 
 ; +-------+
 ; | SETUP |
 ; +-------+
-#NoEnv                      ; Recommended for performance and compatibility with future AutoHotkey releases.
-;#Warn                       ; Enable warnings to assist with detecting common errors.
-;SendMode Input              ; Recommended for new scripts due to its superior speed and reliability.
-;SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+;#Warn  ; Enable warnings to assist with detecting common errors.
 
-; ~~~~~~~~~~~~~~
 ; help for debug
 ; ~~~~~~~~~~~~~~
 ;ListVars                    ; debug window
 ;MsgBox, You pressed mouseUp ; message box
 
-; ~~~~~~~~~
 ; VARIABLES
 ; ~~~~~~~~~
 autoScrollSleep := 150 ;time before auto scroll (milliseconds)
@@ -27,7 +45,6 @@ autoScrollInterval := 50 ;use it to control scroll speed (milliseconds)
 ; | MAIN |
 ; +------+
 
-; ~~~~~~~~~~
 ; Mouse Down
 ; ~~~~~~~~~~
 ; bind mouse4 to nothing : vertical scroll
@@ -72,7 +89,6 @@ XButton1 up::
 return
 
 
-; ~~~~~~~~
 ; Mouse Up
 ; ~~~~~~~~
 ; bind mouse5 to nothing : vertical scroll
@@ -112,8 +128,6 @@ return
 XButton2 up::
 +XButton2 up::
 ^XButton2 up::
-	; stop auto scroll when released
+	; stop auto scroll when released (button is UP)
 	keepLoopUp := 0
 return
-
-
