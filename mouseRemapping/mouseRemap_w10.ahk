@@ -11,7 +11,7 @@
 ;
 ; Usage : - click on XButton1/2 trigger a scroll
 ;         - if button is held, the script wait a short period of time
-;           then endlessly trigger a scroll in the same direction
+;           then endlessly trigger an auto scroll in the same direction
 ;         - When the button is released, the scroll is stopped
 ;
 ;
@@ -19,11 +19,18 @@
 ; | TROUBLESHOOT |
 ; +--------------+
 ; Initialy used "SendMode Input" but this buffer any input during the send action.
-; This result in some buggy behaviour (button maintained even though the button is
+; This result in some buggy behaviour (auto scroll is triggered even though the button is
 ; physicaly released).
 ; Aditionnaly, "Send" has to be used in Blind mode to avoid releasing hotkeys (Ctrl/Shift/...)
 ; Example : Send {Blind}{WheelDown}
-
+; 
+; Without the "Blind" mode, we used to have strange behaviour with the "Shift" key :
+;                ┌ press                         ┌ release
+;   Sample : 0000100000000000111111011111111111110000000
+;                 └────┬────┘      └ random "0" 
+;               key is held, but "0" are returned anyway
+;
+; These problems are resolved with the "Click" command.
 
 ; +-------+
 ; | SETUP |
