@@ -74,7 +74,8 @@ XButton1::
 		if (!keepLoopDown) {
 			return
 		}
-		sleep 15
+		; use high-performance integer division (//)
+		sleep autoScrollSleep//10
 	}
 	
 	while (keepLoopDown) {
@@ -118,7 +119,8 @@ XButton2::
 		if (!keepLoopUp) {
 			return
 		}
-		sleep 15
+		; use high-performance integer division (//)
+		sleep autoScrollSleep//10
 	}
 	
 	while (keepLoopUp) {
