@@ -74,22 +74,22 @@ autoScrollInterval := 50 ;use it to control scroll speed (milliseconds)
 ;   Click function does not support "expression" so variables must be
 ;   enclosed in percents signs
 scrollFunction(firstAction, ByRef keepLoop, scrollSleep, scrollInterval) {
-	keepLoop := 1
-	Click, %firstAction%
-	
-	; wait long enough to trigger auto scroll
-	Loop 10 {
-		if (!keepLoop) {
-			return
-		}
-		; use high-performance integer division (//)
-		sleep scrollSleep//10
-	}
-	
-	while (keepLoop) {
-		Click, %firstAction%
-		sleep scrollInterval
-	}
+    keepLoop := 1
+    Click, %firstAction%
+
+    ; wait long enough to trigger auto scroll
+    Loop 10 {
+        if (!keepLoop) {
+            return
+        }
+        ; use high-performance integer division (//)
+        sleep scrollSleep//10
+    }
+
+    while (keepLoop) {
+        Click, %firstAction%
+        sleep scrollInterval
+    }
 }
 
 ; Mouse Down
@@ -100,14 +100,14 @@ XButton1::
 +XButton1::
 ; ctrl
 ^XButton1::
-	scrollFunction("WheelDown", keepLoopDown, autoScrollSleep, autoScrollInterval)
+    scrollFunction("WheelDown", keepLoopDown, autoScrollSleep, autoScrollInterval)
 return
 
 XButton1 up::
 +XButton1 up::
 ^XButton1 up::
-	; stop auto scroll when released (button is UP)
-	keepLoopDown := 0
+    ; stop auto scroll when released (button is UP)
+    keepLoopDown := 0
 return
 
 
@@ -119,13 +119,12 @@ XButton2::
 +XButton2::
 ; ctrl
 ^XButton2::
-	scrollFunction("WheelUp", keepLoopUp, autoScrollSleep, autoScrollInterval)
+    scrollFunction("WheelUp", keepLoopUp, autoScrollSleep, autoScrollInterval)
 return
 
 XButton2 up::
 +XButton2 up::
 ^XButton2 up::
-	; stop auto scroll when released (button is UP)
-	keepLoopUp := 0
+    ; stop auto scroll when released (button is UP)
+    keepLoopUp := 0
 return
-
