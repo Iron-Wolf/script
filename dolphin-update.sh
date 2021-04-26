@@ -71,7 +71,7 @@
 # Global Variable
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 build_threads=$(( $(nproc) + 1 ))
-install_cmd="checkinstall --install=no --showinstall=no --default \
+package_cmd="checkinstall --install=no --showinstall=no --default \
   --pkgname=dolphin-emu \
   --pkgversion=5.0 \
   --pkgrelease=10506 \
@@ -90,6 +90,8 @@ updatedolphin() {
   echo 'Updating the local repository...'
   git pull origin
   # you can also 'git checkout <id>' to get a specific version
+  #git fetch origin
+  #git checkout 8d4e8
 }
 
 build() {
@@ -111,7 +113,7 @@ echo 'Proceeding to the installation; press Enter to continue or Ctrl+C to cance
 read
 if [ $(whoami) == "root" ];
   then
-    $install_cmd
+    $package_cmd
   else
-    sudo $install_cmd
+    sudo $package_cmd
 fi
