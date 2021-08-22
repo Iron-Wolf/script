@@ -7,8 +7,9 @@ Launch with :
 
 
 Dependencies
-Install pip :
-  sudo apt install python3-pip
+Install required packages :
+  sudo apt install python3-pip \
+                   xdotool
 
 Install mouse (repo : https://github.com/boppreh/mouse
   sudo pip install mouse
@@ -18,6 +19,8 @@ import mouse
 import subprocess
 import re #regex
 
+# Change these options according to your needs.
+# Get the mouse ID with this command : xinput
 MOUSE_ID='12'
 MOUSE_MAPPING='1 2 3 4 5 6 7 0 0'
 AUTO_SCROLL_STEP=10 # time before auto scroll
