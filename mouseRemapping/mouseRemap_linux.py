@@ -2,10 +2,16 @@
 # -*- coding: utf-8 -*- 
 
 """
-doc...
+Launch with :
+  sudo ./mouseRemap_linux.py
+
 
 Dependencies
-mouse : https://github.com/boppreh/mouse
+Install pip :
+  sudo apt install python3-pip
+
+Install mouse (repo : https://github.com/boppreh/mouse
+  sudo pip install mouse
 """
 
 import mouse
