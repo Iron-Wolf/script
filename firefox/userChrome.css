@@ -1,0 +1,52 @@
+/*
+This file can work only if you activate an
+option in firefox config :
+  - go to : about:config
+  - swhitch : toolkit.legacyUserProfileCustomizations.stylesheets > true
+
+Then, you need to place this file in your profile folder 
+(https://www.howtogeek.com/334716/how-to-customize-firefoxs-user-interface-with-userchrome.css/) :
+ - go to : about:profiles
+ - open the root directory
+ - go to "chrome" folder and copy this file in it
+
+
+To debug firefox UI/Js :
+  https://developer.mozilla.org/en-US/docs/Tools/Browser_Toolbox#debugging_popups
+*/
+
+
+
+
+/* 
+Sample CSS : https://github.com/Timvde/UserChrome-Tweaks/blob/master/context-menu/dark-thin-context-menu.css 
+*/
+
+/* context menu */
+menuitem,
+menu
+{
+	color: #2B2B2B !important;
+}
+
+/* favoris */
+toolbarbutton menuitem
+{
+  color: lightgray !important;
+}
+
+/* context menu : new tab */
+toolbarbutton#tabs-newtab-button menuitem
+{
+  color: dimgray !important;
+}
+
+/* 
+Little hack for menus that have sub-menus.
+I don't know how to display the "arrow" so I add a dot...
+*/
+menu>hbox
+{
+  border-top: 5px dotted #555;
+}
+
