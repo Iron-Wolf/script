@@ -73,7 +73,7 @@ build_threads=$(( $(nproc) + 1 ))
 package_cmd="checkinstall --install=no --showinstall=no --default \
   --pkgname=dolphin-emu \
   --pkgversion=5.0 \
-  --pkgrelease=10506 \
+  --pkgrelease=15445 \
   --pkgarch=amd64 \
   --maintainer=iw \
   --backup=no"
@@ -82,6 +82,10 @@ package_cmd="checkinstall --install=no --showinstall=no --default \
 getdolphin() {
   echo 'Downloading Dolphin...'
   git clone https://github.com/dolphin-emu/dolphin.git
+
+  # init submodule in local repo
+  cd $DIR/dolphin
+  git submodule update --init
 }
 
 updatedolphin() {
@@ -97,7 +101,7 @@ build() {
   # If needed, export env variables
   # export CC=/usr/bin/gcc
   # export CXX=/usr/bin/g++
-  cmake $DIR/dolphin -DENABLE_QT2=true
+  cmake $DIR/dolphin #-DENABLE_QT2=true
   make -j $build_threads
 }
 
