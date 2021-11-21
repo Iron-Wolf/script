@@ -10,15 +10,14 @@
 #
 # Execute the script from anywhere, by running : sh /path/to/the/script.sh
 #
-# https://wiki.dolphin-emu.org/index.php?title=Building_Dolphin_on_Linux#Addendum_A
-#
 #
 # +--------------+
 # | Dependencies |
 # +--------------+
-#
-# git : to checkout the source code
-# checkinstall : to build ".deb" package
+# All packages listed on the Wiki : https://wiki.dolphin-emu.org/index.php?title=Building_Dolphin_on_Linux#Addendum_A
+# 
+# You will also need :
+# - checkinstall : to build the ".deb" package
 #
 #
 # +-------------------+
@@ -55,10 +54,10 @@
 # | Build with checkinstall |
 # +-------------------------+
 #
-# Once Dolphin is build, we use checkinstall :
-# - used in the build directory
-# - option '--install=no' is used to not install the package by default
-# - generate the package with : Name = dolphin-emu / Version = major number / Release = minor number
+# Once Dolphin is build, this script use checkinstall :
+# - checkinstall need to be executed in the "build" directory
+# - option '--install=no' is used to NOT install the package by default
+# - the package is generated with : Name = dolphin-emu / Version = major number / Release = minor number
 # - install it with 'dpkg -i'
 #
 # Don't forget to hold the package in apt. Otherwise, 
@@ -109,7 +108,7 @@ mkdir $DIR/build
 cd $DIR/build
 build && echo 'Compiled successfully.' || exit
 
-echo 'Proceeding to the installation; press Enter to continue or Ctrl+C to cancel.'
+echo 'Proceeding to the .deb packaging; press Enter to continue or Ctrl+C to cancel.'
 read
 if [ $(whoami) == "root" ];
   then
