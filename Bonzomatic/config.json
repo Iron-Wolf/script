@@ -1,0 +1,10 @@
+{
+  "window":{
+    "width":1920,
+    "height":1020,
+    "fullscreen":false,
+  },
+  "gui":{
+    "scrollYFactor":10.0,
+  }
+}
