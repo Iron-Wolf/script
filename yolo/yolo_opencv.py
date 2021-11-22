@@ -5,7 +5,9 @@
 ############################################
 #
 # Description : 
-#  YOLO implementation in python, using OpenCV deep neural network module
+#  YOLO implementation in python, using OpenCV deep neural network module.
+#
+#  You will need a Yolo Weight file : https://pjreddie.com/media/files/yolov3.weights
 #
 
 import cv2
