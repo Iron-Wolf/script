@@ -1,5 +1,8 @@
 #!/bin/bash
 #
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# ! NEED TESTING - PROBABLY NOT WORKING ANYMORE !
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Enforce open source driver (Mesa3D) and launch minecraft.
 #
 # Note that these environment variables will work for any 
