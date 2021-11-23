@@ -56,7 +56,9 @@
 #
 # Once Dolphin is build, this script use checkinstall :
 # - checkinstall need to be executed in the "build" directory
-# - option '--install=no' is used to NOT install the package by default
+# - options to NOT install the package by default :
+#   - --install=no > not install de DEB package
+#   - --fstrans=yes > checkinstall will not touch the file system
 # - the package is generated with : Name = dolphin-emu / Version = major number / Release = minor number
 # - install it with 'dpkg -i'
 #
@@ -70,13 +72,14 @@
 # Global Variable
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 build_threads=$(( $(nproc) + 1 ))
-package_cmd="checkinstall --install=no --showinstall=no --default \
+package_cmd="checkinstall --showinstall=no --default \
   --pkgname=dolphin-emu \
   --pkgversion=5.0 \
   --pkgrelease=15445 \
   --pkgarch=amd64 \
   --maintainer=iw \
-  --backup=no"
+  --backup=no \
+  --install=no --fstrans=yes"
 
 # Methods
 getdolphin() {
