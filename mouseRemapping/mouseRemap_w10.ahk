@@ -94,7 +94,8 @@ scrollFunction(firstAction, ByRef keepLoop, scrollSleep, scrollInterval) {
 
 ; Mouse Down
 ; ----------
-; bind mouse4 to nothing : vertical scroll
+; Bind XButton1 (4th mouse button) to nothing.
+; Allows us to override his default behaviour with a vertical scroll.
 XButton1::
 ; shift
 +XButton1::
@@ -113,7 +114,8 @@ return
 
 ; Mouse Up
 ; --------
-; bind mouse5 to nothing : vertical scroll
+; Bind XButton2 (5th mouse button) to nothing.
+; Allows us to override his default behaviour with a vertical scroll.
 XButton2::
 ; shift
 +XButton2::
