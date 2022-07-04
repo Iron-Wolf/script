@@ -10,24 +10,31 @@ Serves as a back-up and centralization for all my tuning/tweaking needs.
 I don't know where to put this, so here it is.
 
 ## Highlighting box
-highlights a text by framing it in an element with an icon.  
+Highlights a text by framing it in an element with an icon.  
 Useful for writing a Wiki.  
+This was inspired by some cool documentation, like [Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using.devtools).
 
-> [ℹ️](# "Info")  
-> Add details or a context to something.  
+> [✅](# "Tips") Tips title  
+> Add another way of doing things or give details on how to use.  
 > This box can be expanded with several lines.
 
-> [⚠️](# "Alert")  
+> [ℹ️](# "Info") Info title  
+> Add details or a context to something
+
+> [⚠️](# "Alert") Alert title  
 > Warns or prevent potential consequences
 
-> [⛔️](# "Forbidden")  
+> [🔥](# "Caution") Caution title  
+> Extra warning to prevent major issues
+
+> [⛔️](# "Forbidden") Forbidden title  
 > Indicate that something is impossible or not advised
 
-> [✅](# "Tips")  
-> Add another way of doing things or give details on how to use
-
-> [🚧](# "In Progress")  
+> [🚧](# "In Progress") In Progress title  
 > Indicate that the information needs to be finished or reworked
+
+> [🩹](# "Problem Solving") Problem Solving title  
+> Give instruction on how to resolve or troubleshoot an issue
 
 To add this box, you can use this notation :  
 ```markdown
