@@ -1,10 +1,16 @@
 ![Top Language](https://img.shields.io/github/languages/top/Iron-Wolf/script)
 ![GitHub language count](https://img.shields.io/github/languages/count/Iron-Wolf/script?color=blueviolet)
 
+# Table of contents  
+- [Description](#description)
+- [Markdown Documentation](#markdown-documentation)
+- [Writting Conventions](#writting-conventions)
+
 # Description
 
 Contains scripts and notes on various software (games, tools, linux, ...).  
 Serves as a back-up and centralization for all my tuning/tweaking needs.
+
 
 # Markdown Documentation
 I don't know where to put this, so here it is.
@@ -43,3 +49,18 @@ add anchor ─────┐  │    ┌──────  tooltip
             > [ℹ️](# "Info")
             > Text here
 ```
+
+
+# Writting Conventions
+
+## Command/code synopsis
+Convention used to describe command usage or code snippets (inspired by the man-pages).  
+Usefull for text friendly manual or usage tips in documentations.  
+- boldface is used for as-is text
+- italics are used to indicate replaceable arguments
+- Brackets ([]) surround optional arguments
+- "rafters" (<>) surround required arguments (postgres use Braces ({}) for that)
+- vertical bars (|) separate choices
+- ellipses (...) mean that the preceding element can be repeated
+
+All other symbols, including parentheses, should be taken literally
