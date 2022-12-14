@@ -54,13 +54,26 @@ add anchor ─────┐  │    ┌──────  tooltip
 # Writting Conventions
 
 ## Command/code synopsis
+### Description
 Convention used to describe command usage or code snippets (inspired by the man-pages).  
 Usefull for text friendly manual or usage tips in documentations.  
-- boldface is used for as-is text
-- italics are used to indicate replaceable arguments
-- Brackets ([]) surround optional arguments
-- "rafters" (<>) surround required arguments (postgres use Braces ({}) for that)
-- vertical bars (|) separate choices
-- ellipses (...) mean that the preceding element can be repeated
+- **boldface** is used for as-is text
+- _italics_ are used to indicate replaceable arguments
+- Brackets `[]` surround optional arguments
+- Angle-brackets `<>` surround required arguments (postgres use Braces `{}` for that)
+- vertical bars `|` separate choices
+- ellipses `...` mean that the preceding element can be repeated
 
 All other symbols, including parentheses, should be taken literally
+
+### Exemple
+> **ftp** [-**pinegvd**] [_host_]  
+- ftp -p sample.host
+- ftp -i other.host
+
+> GRANT { { CREATE | CONNECT | TEMPORARY | TEMP } [, ...] | ALL [ PRIVILEGES ] }  
+> ON DATABASE database_name [, ...]  
+> TO role_specification [, ...] [ WITH GRANT OPTION ]  
+> [ GRANTED BY role_specification ]
+- GRANT CREATE, CONNECT ON DATABASE db-sample TO db-user
+- GRANT ALL ON DATABASE db-sample TO db-user
