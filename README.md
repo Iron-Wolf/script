@@ -55,14 +55,17 @@ add anchor ─────┐  │    ┌──────  tooltip
 
 ## Command/code synopsis
 ### Description
-Convention used to describe command usage or code snippets (inspired by the man-pages).  
+Convention used to describe command usage or code snippets.  
 Usefull for text friendly manual or usage tips in documentations.  
-- **boldface** is used for as-is text
-- _italics_ are used to indicate replaceable arguments
-- Brackets `[]` surround optional arguments
-- Angle-brackets `<>` surround required arguments (postgres use Braces `{}` for that)
-- vertical bars `|` separate choices
-- ellipses `...` mean that the preceding element can be repeated
+
+| Usage | [Manual (Unix)](https://man7.org/linux/man-pages/man1/man.1.html#DESCRIPTION) | Manual (GNU) | [PostgreSQL](https://www.postgresql.org/docs/current/notation.html) |
+|---|---|---|---|
+| used for as-is text | **bold** format (no format in cli) | **bold** format (no format in cli) | no format |
+| indicate replaceable arguments | _italic_ format (underlined uppercase in cli) | _italic_ format (underlined uppercase in cli) | _**italic and bold**_ |
+| choices delimiter | not supported (multi-line) | braces `{}` | braces `{}` |
+| choices separator | vertical bars `\|` | vertical bars `\|` | vertical bars `\|` |
+| surround optional parts or arguments | brackets `[]` | brackets `[]` | brackets `[]` |
+| the preceding element can be repeated | ellipses `...` | ellipses `...` | ellipses `...` |
 
 All other symbols, including parentheses, should be taken literally
 
