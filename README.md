@@ -71,11 +71,11 @@ All other symbols, including parentheses, should be taken literally
 
 ### Exemple
 > **ftp** [-**pinegvd**] [_host_]  
-> ftp (-[pinegvd]+)?( \g<-2>)* [a-zA-Z0-9_.]+
+> `ftp (-[pinegvd]+)?( \g<-2>)* [a-zA-Z0-9_.]+`
 - ftp -p sample.host
 - ftp -i other.host
 
 > GRANT { { CREATE | CONNECT | TEMPORARY | TEMP } [, ...] | ALL [ PRIVILEGES ] } ON DATABASE database_name [, ...] TO role_specification [, ...] [ WITH GRANT OPTION ][ GRANTED BY role_specification ]  
-> GRANT (((CREATE|CONNECT|TEMPORARY|TEMP)(,\g<2>)*)|(ALL( PRIVILEGES)?)) ON DATABASE (\w+)(,\g<-2>)* TO (\w+)(,\g<-2>)*( WITH GRANT OPTION)?( GRANTED BY (\w+)(,\g<-2>)*)?
+> `GRANT (((CREATE|CONNECT|TEMPORARY|TEMP)(,\g<2>)*)|(ALL( PRIVILEGES)?)) ON DATABASE (\w+)(,\g<-2>)* TO (\w+)(,\g<-2>)*( WITH GRANT OPTION)?( GRANTED BY (\w+)(,\g<-2>)*)?`
 - GRANT CREATE, CONNECT ON DATABASE db-sample TO db-user
 - GRANT ALL ON DATABASE db-sample TO db-user
