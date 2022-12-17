@@ -58,25 +58,24 @@ add anchor ─────┐  │    ┌──────  tooltip
 Convention used to describe command usage or code snippets.  
 Usefull for text friendly manual or usage tips in documentations.  
 
-| Usage | [Manual (Unix)](https://man7.org/linux/man-pages/man1/man.1.html#DESCRIPTION) | Manual (GNU) | [PostgreSQL](https://www.postgresql.org/docs/current/notation.html) |
+| Usage | [Manual (Unix)](https://man7.org/linux/man-pages/man1/man.1.html#DESCRIPTION) | [PostgreSQL](https://www.postgresql.org/docs/current/notation.html) | regex
 |---|---|---|---|
-| used for as-is text | **bold** format (no format in cli) | **bold** format (no format in cli) | no format |
-| indicate replaceable arguments | _italic_ format (underlined uppercase in cli) | _italic_ format (underlined uppercase in cli) | _**italic and bold**_ |
-| choices delimiter | not supported (multi-line) | braces `{}` | braces `{}` |
-| choices separator | vertical bars `\|` | vertical bars `\|` | vertical bars `\|` |
-| surround optional parts or arguments | brackets `[]` | brackets `[]` | brackets `[]` |
-| the preceding element can be repeated | ellipses `...` | ellipses `...` | ellipses `...` |
+| used for as-is text | **bold** format (no format in cli) | no format | |
+| indicate replaceable arguments | _italic_ format (underlined uppercase in cli) | _**italic and bold**_ | `\w+` |
+| choices delimiter | not supported (braces `{}` in GNU style) | braces `{}` | `()` |
+| choices separator | vertical bars `\|` | vertical bars `\|` | `\|` |
+| surround optional parts or arguments | brackets `[]` | brackets `[]` | `()?` |
+| the preceding element can be repeated | ellipses `...` | ellipses `...` | `( \g<-2>)*` |
 
 All other symbols, including parentheses, should be taken literally
 
 ### Exemple
 > **ftp** [-**pinegvd**] [_host_]  
+> ftp (-[pinegvd]+)?( \g<-2>)* [a-zA-Z0-9_.]+
 - ftp -p sample.host
 - ftp -i other.host
 
-> GRANT { { CREATE | CONNECT | TEMPORARY | TEMP } [, ...] | ALL [ PRIVILEGES ] }  
-> ON DATABASE database_name [, ...]  
-> TO role_specification [, ...] [ WITH GRANT OPTION ]  
-> [ GRANTED BY role_specification ]
+> GRANT { { CREATE | CONNECT | TEMPORARY | TEMP } [, ...] | ALL [ PRIVILEGES ] } ON DATABASE database_name [, ...] TO role_specification [, ...] [ WITH GRANT OPTION ][ GRANTED BY role_specification ]  
+> GRANT (((CREATE|CONNECT|TEMPORARY|TEMP)(,\g<2>)*)|(ALL( PRIVILEGES)?)) ON DATABASE (\w+)(,\g<-2>)* TO (\w+)(,\g<-2>)*( WITH GRANT OPTION)?( GRANTED BY (\w+)(,\g<-2>)*)?
 - GRANT CREATE, CONNECT ON DATABASE db-sample TO db-user
 - GRANT ALL ON DATABASE db-sample TO db-user
