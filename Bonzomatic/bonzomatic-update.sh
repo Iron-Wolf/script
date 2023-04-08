@@ -51,7 +51,7 @@ build_threads=$(( $(nproc) + 1 ))
 ck_install_cmd="checkinstall --install=no --showinstall=no --default \
   --pkgname=bonzomatic \
   --pkgversion=2022.08.20 \
-  --pkgrelease=5afe3cbce0de58b80ad0b43487788a93e5d39594 \
+  --pkgrelease=5afe3cbc \
   --pkgarch=amd64 \
   --maintainer=iw \
   --backup=no"
