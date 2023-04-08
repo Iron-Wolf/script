@@ -13,9 +13,9 @@
 # - cmake : generate the buildsystem of the project
 # - checkinstall : build the ".deb" package
 #
-# +----------------+
-# | Troubleshoting |
-# +----------------+
+# +-----------------+
+# | Troubleshooting |
+# +-----------------+
 # If error 
 # -- Could NOT find OpenGL (missing: OPENGL_opengl_LIBRARY OPENGL_INCLUDE_DIR OpenGL)
 # -> install : libgl1-mesa-dev
