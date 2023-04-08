@@ -8,10 +8,21 @@
 # +--------------+
 # | Dependencies |
 # +--------------+
-# You will need :
+# You will need these packages :
 # - git : clone the repo
 # - cmake : generate the buildsystem of the project
 # - checkinstall : build the ".deb" package
+#
+# +----------------+
+# | Troubleshoting |
+# +----------------+
+# If error 
+# -- Could NOT find OpenGL (missing: OPENGL_opengl_LIBRARY OPENGL_INCLUDE_DIR OpenGL)
+# -> install : libgl1-mesa-dev
+#
+# If error :
+# -- RandR headers not found; install libxrandr development package
+# -> install : xorg-dev
 #
 # +--------------------+
 # | Bonzomatic details |
