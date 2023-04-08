@@ -3,8 +3,19 @@
 # +-------------+
 # | Description |
 # +-------------+
-# Clone and build Bonzomatic.
+# This script clone and build the Bonzomatic software.
 #
+# +--------------+
+# | Dependencies |
+# +--------------+
+# You will need :
+# - git : clone the repo
+# - cmake : generate the buildsystem of the project
+# - checkinstall : build the ".deb" package
+#
+# +--------------------+
+# | Bonzomatic details |
+# +--------------------+
 # If launched from a folder, Bonzomatic will search for files :
 #  - config.json : settings
 #  - shader.glsl : last working shader
@@ -20,8 +31,8 @@ build_threads=$(( $(nproc) + 1 ))
 #   pkgrelease : git commit ID
 ck_install_cmd="checkinstall --install=no --showinstall=no --default \
   --pkgname=bonzomatic \
-  --pkgversion=21.04.16 \
-  --pkgrelease=f6570cc \
+  --pkgversion=2022.08.20 \
+  --pkgrelease=5afe3cbce0de58b80ad0b43487788a93e5d39594 \
   --pkgarch=amd64 \
   --maintainer=iw \
   --backup=no"
@@ -33,7 +44,7 @@ getBonzo() {
 }
 
 updateBonzo() {
-  cd $DIR/dolphin
+  cd $DIR/Bonzomatic
   echo 'Updating the local repository...'
   git pull origin
 }
