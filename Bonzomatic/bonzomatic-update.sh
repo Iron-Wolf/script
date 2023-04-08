@@ -4,6 +4,10 @@
 # | Description |
 # +-------------+
 # This script clone and build the Bonzomatic software.
+# It then generates a .deb package that can easily be installed/updated.
+#
+# Warning : this is only tested on Debian based systems.
+# No support is provided for other systems.
 #
 # +--------------+
 # | Dependencies |
@@ -16,13 +20,17 @@
 # +-----------------+
 # | Troubleshooting |
 # +-----------------+
-# If error 
-# -- Could NOT find OpenGL (missing: OPENGL_opengl_LIBRARY OPENGL_INCLUDE_DIR OpenGL)
-# -> install : libgl1-mesa-dev
+# If error : Could NOT find OpenGL (missing: OPENGL_opengl_LIBRARY OPENGL_INCLUDE_DIR OpenGL)
+# Solution : install package "libgl1-mesa-dev"
 #
-# If error :
-# -- RandR headers not found; install libxrandr development package
-# -> install : xorg-dev
+# If error : RandR headers not found; install libxrandr development package
+# Solution : install package "xorg-dev"
+#
+# If error : GL/glu.h no such file or directory
+# Solution : install package "libglu1-mesa-dev"
+#
+# If error : alsa/asoundlib.h no such file or directory
+# Solution : install package "libasound2-dev"
 #
 # +--------------------+
 # | Bonzomatic details |
