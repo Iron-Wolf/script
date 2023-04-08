@@ -12,7 +12,12 @@
 # +--------------+
 # | Dependencies |
 # +--------------+
-# You will need these packages :
+# All packages listed on the ReadMe : https://github.com/Gargaj/Bonzomatic#linux
+# - xorg-dev
+# - libasound2-dev
+# - libglu1-mesa-dev
+# 
+# You will also need :
 # - git : clone the repo
 # - cmake : generate the buildsystem of the project
 # - checkinstall : build the ".deb" package
@@ -22,15 +27,6 @@
 # +-----------------+
 # If error : Could NOT find OpenGL (missing: OPENGL_opengl_LIBRARY OPENGL_INCLUDE_DIR OpenGL)
 # Solution : install package "libgl1-mesa-dev"
-#
-# If error : RandR headers not found; install libxrandr development package
-# Solution : install package "xorg-dev"
-#
-# If error : GL/glu.h no such file or directory
-# Solution : install package "libglu1-mesa-dev"
-#
-# If error : alsa/asoundlib.h no such file or directory
-# Solution : install package "libasound2-dev"
 #
 # +--------------------+
 # | Bonzomatic details |
