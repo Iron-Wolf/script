@@ -38,8 +38,10 @@
 # If launched from a folder, Bonzomatic will search for files :
 #  - config.json : settings
 #  - shader.glsl : last working shader
-# If files not found, Bonzomatic will use default param and
-# a sample shader
+# If files not found, Bonzomatic will use default param and a sample shader.
+# 
+# To retrieve the screen width/height value to use in the "config.json" file,
+# you can run this command : xrandr | grep ' connected'
 
 # Global Variable
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
