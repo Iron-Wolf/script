@@ -14,7 +14,7 @@ layout(location = 0) out vec4 out_color; // out_color must be written in order t
 
 
 /*
-Translate shadertoy to bonzomatic.
+Shader translated from shadertoy to bonzomatic.
 Source : https://www.shadertoy.com/view/Mlj3WV
 
 Simple shader used to configure/test audio setup.

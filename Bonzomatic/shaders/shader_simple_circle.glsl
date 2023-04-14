@@ -20,7 +20,7 @@ layout(location = 0) out vec4 out_color; // out_color must be written in order t
 
 
 /*
-Translate glslsandbox to bonzomatic.
+Shader translated from shadertoy to bonzomatic.
 Source : http://glslsandbox.com/e#24832.0
 */
 void main( void ) {
