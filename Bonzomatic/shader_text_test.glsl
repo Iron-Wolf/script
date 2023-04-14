@@ -19,12 +19,12 @@ layout(location = 0) out vec4 out_color; // out_color must be written in order t
 
 
 /*
-Translate shadertoy to bonzomatic.
+Shader translated from shadertoy to bonzomatic.
 Source : https://www.shadertoy.com/view/Mt2GWD
 
 This is a simple shader used to test if I can
 display a text over a scene.
-The "print_number" method has been pached to handle
+The "print_number" method has been patched to handle
 negatibe values.
 
 Also, the shadertoy variables has been mapped into
@@ -203,7 +203,7 @@ vec2 print_pos = vec2(0);
 float extract_bit(float n, float b)
 {
   b = clamp(b,-1.0,24.0);
-	return floor(mod(floor(n / pow(2.0,floor(b))),2.0));   
+  return floor(mod(floor(n / pow(2.0,floor(b))),2.0));   
 }
 
 //Returns the pixel at uv in the given bit-packed sprite.
@@ -272,7 +272,7 @@ float print_number(float number, vec2 uv)
   float result = 0.0;
   bool hasSign = false;
   
-	for(int i = 3;i >= -1;i--) {
+  for(int i = 3;i >= -1;i--) {
     float absNumber = abs(number); // use abs because the get_digit method does not have negative value
     float digit = mod( absNumber / pow(10.0, float(i)) , 10.0);
     
@@ -292,22 +292,21 @@ float print_number(float number, vec2 uv)
     {
       result += char(get_digit(digit),uv);
     }
-  }   
+  }
   return result;
 }
 
 float print_integer(float number, int zeros, vec2 uv)
 {
   float result = 0.0;
-    
-	for(int i = MAX_INT_DIGITS;i >= 0;i--){
+  for(int i = MAX_INT_DIGITS;i >= 0;i--) {
     float digit = mod( number / pow(10.0, float(i)) , 10.0);
 
     if(abs(number) > pow(10.0, float(i)) || zeros > i  || i == 0) //Clip off leading zeros.
     {
       result += char(get_digit(digit),uv);
     }
-  }   
+  }
   return result;
 }
 
@@ -342,13 +341,13 @@ void main(void)
   vec2 uvDeb = fragCoord.xy / DOWN_SCALE;
   
   // static text
-	float pixel = text(uvDeb);
+  float pixel = text(uvDeb);
   
   // add custom value after the text
   pixel += char(ch_col,uvDeb);
   pixel += char(ch_spc,uvDeb);
   pixel += print_number(sin(iTime), uvDeb);
-    
+  
   //Shading stuff
   vec3 col = vec3(1); // base contrast (1,1,1 => white)
   col *= mix(vec3(0.2),vec3(0,1,0),pixel); // if pixel is set (==1), color is set to green
@@ -363,10 +362,10 @@ void main(void)
   
   // If pixel is not set (==0), we draw the scene.
   // This trick allow us to allway display text OVER the scene.
-  // Drawback : text need to be allways calculate before.
+  // Drawback : the text must always be calculated before the scene.
   if (pixel == 0) {
-		col=vec3(uv, 0.5+0.5*sin(iTime));
-	}
-
-	out_color = vec4(vec3(col), 1.0);
+    col=vec3(uv, 0.5+0.5*sin(iTime));
+  }
+  
+  out_color = vec4(vec3(col), 1.0);
 }
