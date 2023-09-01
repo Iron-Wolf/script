@@ -14,8 +14,7 @@
 # +--------------+
 # | Dependencies |
 # +--------------+
-# All packages listed on the Wiki : https://wiki.dolphin-emu.org/index.php?title=Building_Dolphin_on_Linux
-# Be carefull on non Debian base OS: Addendum section is deprecated
+# All packages listed on the project Wiki : https://github.com/dolphin-emu/dolphin/wiki/Building-for-Linux
 # 
 # You will also need :
 # - checkinstall : to build the ".deb" package
@@ -67,7 +66,6 @@
 # it will be replaced the next time the system is updated :
 #   $ apt-mark hold dolphin-emu
 #   $ apt-mark showhold
-#
 
 
 # Global Variable
@@ -76,12 +74,11 @@ build_threads=$(( $(nproc) + 1 ))
 package_cmd="checkinstall --showinstall=no --default \
   --pkgname=dolphin-emu \
   --pkgversion=5.0 \
-  --pkgrelease=17269 \
+  --pkgrelease=19870 \
   --pkgarch=amd64 \
   --maintainer=iw \
   --backup=no \
   --install=no"
-
 
 # Methods
 getdolphin() {
@@ -90,16 +87,17 @@ getdolphin() {
 
   # init submodule in local repo
   cd $DIR/dolphin
-  git submodule update --init
+  git submodule update --init --recursive
 }
 
 updatedolphin() {
   cd $DIR/dolphin
   echo 'Updating the local repository...'
-  git pull origin
+  #git pull origin --recurse-submodules
   # you can also 'git checkout <id>' to get a specific version
-  #git fetch origin
-  #git checkout 8d4e8
+  git fetch origin
+  git checkout 032c77b462a220016f23c5079e71bb23e0ad2adf
+  git submodule update
 }
 
 build() {
