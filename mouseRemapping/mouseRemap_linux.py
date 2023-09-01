@@ -1,17 +1,15 @@
-#!/usr/bin/env python3 
-# -*- coding: utf-8 -*- 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 """
 Launch with :
   sudo ./mouseRemap_linux.py
 
-
 Dependencies
 Install required packages :
   sudo apt install python3-pip \
                    xdotool
-
-Install mouse (repo : https://github.com/boppreh/mouse
+Install mouse (repo : https://github.com/boppreh/mouse) :
   sudo pip install mouse
 """
 
@@ -19,12 +17,40 @@ import mouse
 import subprocess
 import re #regex
 
-# Change these options according to your needs.
-# Get the mouse ID with this command : xinput
-MOUSE_ID='12'
-MOUSE_MAPPING='1 2 3 4 5 6 7 0 0'
-AUTO_SCROLL_STEP=10 # time before auto scroll
-AUTO_SCROLL_INTERVAL=30 # control auto scroll speed (milliseconds)
+# Change these options according to your needs
+MOUSE_ID = '14' # get your ID with the command : xinput
+MOUSE_MAPPING = '1 2 3 4 5 6 7 0 0'
+AUTO_SCROLL_STEP = 10 # time before auto scroll
+AUTO_SCROLL_INTERVAL = 30 # control auto scroll speed (milliseconds)
+
+"""
+Help diagram for MOUSE_MAPPING variable :
+
+           b5
+           b4
+           b2
+        b1  │  b3
+         │  │  │
+         v  v  v
+        ┌──┬┬──┐
+        │  ││  │
+        ├──┴┴──┤      < A super nice top
+  b9─> ┌┤      │      < view of a mouse
+       └┤      │
+  b8─> ┌┤      │
+       └┤      │
+        └──────┘
+
+b1 : main button
+b2 : scroll wheel press
+b3 : secondary button
+b4 : scroll wheel up
+b5 : scroll wheel down
+b6 : ??
+b7 : ??
+b8 : side-back
+b9 : side-forward
+"""
 
 
 """
@@ -75,13 +101,13 @@ def scrollFunction(wheelDir, buttonNum):
       "--repeat", "1", 
       "--delay", str(AUTO_SCROLL_INTERVAL),
       wheelDir])
-    keepLoop=butonState(buttonNum)
+    keepLoop = butonState(buttonNum)
 
 
 # +------+
 # | MAIN |
 # +------+
-def main(): 
+def main():
   # remove all registered events, just to be sure
   mouse.unhook_all()
 
@@ -92,18 +118,12 @@ def main():
   subprocess.run(["xinput set-button-map {0} {1}".format(MOUSE_ID, MOUSE_MAPPING)], shell=True)
   subprocess.run(["xinput", "--get-button-map", MOUSE_ID])
 
-  mouse.on_button(scrollFunction,("5","8"),'x','down')
-  mouse.on_button(scrollFunction,("4","9"),'x2','down')
+  mouse.on_button(scrollFunction, ("5","8"), 'x', 'down')
+  mouse.on_button(scrollFunction, ("4","9"), 'x2', 'down')
 
 
 # enable use of the script as an imported module
-if __name__ == "__main__": 
-	main()
+if __name__ == "__main__":
+  main()
 
-input('wait...\n')
-
-
-
-
-
-
+input('press any key to exit...\n')
