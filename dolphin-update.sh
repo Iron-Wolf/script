@@ -8,13 +8,14 @@
 # then compiles it and finally installs it. 
 # It is somewhat interactive and distro-independent.
 #
-# Execute the script from anywhere, by running : sh /path/to/the/script.sh
+# Make the script executable and execute it, by running : ./script.sh
 #
 #
 # +--------------+
 # | Dependencies |
 # +--------------+
-# All packages listed on the Wiki : https://wiki.dolphin-emu.org/index.php?title=Building_Dolphin_on_Linux#Addendum_A
+# All packages listed on the Wiki : https://wiki.dolphin-emu.org/index.php?title=Building_Dolphin_on_Linux
+# Be carefull on non Debian base OS: Addendum section is deprecated
 # 
 # You will also need :
 # - checkinstall : to build the ".deb" package
@@ -75,11 +76,12 @@ build_threads=$(( $(nproc) + 1 ))
 package_cmd="checkinstall --showinstall=no --default \
   --pkgname=dolphin-emu \
   --pkgversion=5.0 \
-  --pkgrelease=15445 \
+  --pkgrelease=17269 \
   --pkgarch=amd64 \
   --maintainer=iw \
   --backup=no \
-  --install=no --fstrans=yes"
+  --install=no"
+
 
 # Methods
 getdolphin() {
