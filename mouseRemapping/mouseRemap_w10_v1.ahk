@@ -1,3 +1,5 @@
+#Requires AutoHotkey v1.1 ; script only tested with V1.1
+
 ; +-------------+
 ; | DESCRIPTION |
 ; +-------------+
