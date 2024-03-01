@@ -50,6 +50,8 @@
 ; | SETUP |
 ; +-------+
 ;#Warn  ; Enable warnings to assist with detecting common errors.
+#SingleInstance Force
+Persistent ; Will not exit automatically (you can use its tray icon to open the script)
 
 ; help for debug
 ; -------------
@@ -60,8 +62,21 @@
 ; ---------
 autoScrollSleep := 150 ;time before auto scroll (milliseconds)
 autoScrollInterval := 50 ;use it to control scroll speed (milliseconds)
-keepLoopDown := 0
-keepLoopUp := 0
+keepScroll := false
+
+
+;while(true) {
+;    isB1 := GetKeyState("XButton1", "P")
+;    isB2 := GetKeyState("XButton2", "P")
+;    if (isB1) {
+;        MouseClick("WheelDown")
+;        sleep 100
+;    }
+;    else if (isB2) {
+;        MouseClick("WheelUp")
+;        sleep 100
+;    }
+;}
 
 ; +------+
 ; | MAIN |
@@ -76,25 +91,17 @@ keepLoopUp := 0
 ; Notes :
 ;   Click function does not support "expression" so variables must be
 ;   enclosed in percents signs
-scrollFunction(firstAction, scrollSleep, scrollInterval) {
-	global keepLoopDown
-	global keepLoopUp
-	
+scrollFunction(firstAction) {
     MouseClick(firstAction)
-	sleep scrollSleep
+    sleep autoScrollSleep
 
-    ; wait long enough to trigger auto scroll
-    Loop 10 {
-        ;if (!keepLoopDown || !keepLoopUp) {
-        ;    return
-        ;}
-        ; use high-performance integer division (//)
-        ;sleep scrollSleep//10
-    }
-	
-    while (keepLoopDown || keepLoopUp) {
+    ; retrieve the physical (P) state of the button
+    ;isKeyDown := GetKeyState("XButton1", "P") || GetKeyState("XButton2", "P")
+    while (keepScroll) {
+        ;isKeyDown := false
         MouseClick(firstAction)
-        sleep scrollInterval
+        sleep autoScrollInterval
+        ;isKeyDown := GetKeyState("XButton1", "P") || GetKeyState("XButton2", "P")
     }
 }
 
@@ -102,22 +109,20 @@ scrollFunction(firstAction, scrollSleep, scrollInterval) {
 ; ----------
 ; Bind XButton1 (4th mouse button) to nothing.
 ; Allows us to override his default behaviour with a vertical scroll.
-XButton1::
-; shift
-+XButton1::
-; ctrl
-^XButton1::
+$XButton1::
+$+XButton1::
+$^XButton1::
 {
-	global keepLoopDown := 1
-    scrollFunction("WheelDown", autoScrollSleep, autoScrollInterval)
+    global keepScroll := true
+    scrollFunction("WheelDown")
 }
 
-XButton1 up::
-+XButton1 up::
-^XButton1 up::
+$XButton1 up::
+$+XButton1 up::
+$^XButton1 up::
 {
     ; stop auto scroll when released (button is UP)
-    global keepLoopDown := 0
+    global keepScroll := false
 }
 
 
@@ -125,23 +130,26 @@ XButton1 up::
 ; --------
 ; Bind XButton2 (5th mouse button) to nothing.
 ; Allows us to override his default behaviour with a vertical scroll.
-XButton2::
-; shift
-+XButton2::
-; ctrl
-^XButton2::
+$XButton2::
+$+XButton2::
+$^XButton2::
 {
-	global keepLoopUp := 1
-    scrollFunction("WheelUp", autoScrollSleep, autoScrollInterval)
+    global keepScroll := true
+    scrollFunction("WheelUp")
 }
 
-XButton2 up::
-+XButton2 up::
-^XButton2 up::
+$XButton2 up::
+$+XButton2 up::
+$^XButton2 up::
 {
     ; stop auto scroll when released (button is UP)
-    global keepLoopUp := 0
+    global keepScroll := false
 }
 
 
-Esc::ExitApp  ; Exit script with Escape key
+; Exit script with Ctrl+Alt+E
+^!e::
+{
+    ; work with "persistent" mode because it will terminate the app (and not the Thread)
+    ExitApp 
+}
