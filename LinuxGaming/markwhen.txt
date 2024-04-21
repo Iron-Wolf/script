@@ -1,9 +1,11 @@
 #valve: #9a9996
 #vulkan: #c01c28
 #tools: #16a34c
+#driver: #813d9c
 #glod: #f5c211
 
 title: Linux Gaming
+
 
 section Valve #valve
 2013-02-14: Steam Linux (V1) #valve
@@ -49,6 +51,7 @@ Traduit les appels OpenGL via Vulkan
 La librairie DXVK gère maintenant DirectX 9, 10 et 11
 endSection
 
+
 section Outils #tools
 2010-01-22: Lutris (1er commit) #tools
 Launcher graphique intégrant beaucoup de configurations différentes pour faire tourner des jeux sous GNU/Linux.
@@ -73,4 +76,15 @@ Permet de faire tourner des programmes CUDA sur une architecture AMD.
 
 2020-12-26: Heroic Games (1er commiut) #tools
 Launcher pour les store GOG et Epic Games
+endSection
+
+
+section Driver #driver
+2024-03-06: R550 stable #driver
+Le module noyau, open source, développé par Nvidia est considéré comme "stable".
+Délivre des [performances similaires](https://www.phoronix.com/review/nvidia-r550-open) au driver propriétaire 
+
+2024-03-20: Nova (annonce) #driver
+Driver open source développé par Red Hat.
+[Source](https://www.gamingonlinux.com/2024/03/nova-a-rust-based-linux-driver-for-nvidia-gpus-announced/)
 endSection
