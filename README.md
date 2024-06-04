@@ -20,27 +20,21 @@ Highlights a text by framing it in an element with an icon.
 Useful for writing a Wiki.  
 This was inspired by some cool documentation, like [Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using.devtools).
 
-> [✅](# "Tips") Tips title  
+> [ℹ️](# "Note") Note  
+> Add details or a context to something
+
+> [✅](# "Tips") Tips  
 > Add another way of doing things or give details on how to use.  
 > This box can be expanded with several lines.
 
-> [ℹ️](# "Info") Info title  
-> Add details or a context to something
-
-> [⚠️](# "Alert") Alert title  
-> Warns or prevent potential consequences
-
-> [🔥](# "Caution") Caution title  
+> [👉](# "Important") Important  
 > Extra warning to prevent major issues
 
-> [⛔️](# "Forbidden") Forbidden title  
+> [⚠️](# "Warning") Warning  
+> Warns or prevent potential consequences
+
+> [⛔️](# "Caution") Caution  
 > Indicate that something is impossible or not advised
-
-> [🚧](# "In Progress") In Progress title  
-> Indicate that the information needs to be finished or reworked
-
-> [🩹](# "Problem Solving") Problem Solving title  
-> Give instruction on how to resolve or troubleshoot an issue
 
 To add this box, you can use this notation :  
 ```markdown
@@ -49,6 +43,22 @@ add anchor ─────┐  │    ┌──────  tooltip
             > [ℹ️](# "Info")
             > Text here
 ```
+
+## Highlight in GitHub
+> [!NOTE]
+> Useful information that users should know, even when skimming content.
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
 
 
 # Writting Conventions
