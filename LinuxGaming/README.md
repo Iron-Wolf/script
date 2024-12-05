@@ -70,14 +70,16 @@ gitGraph TB:
 > DXVK : DirectX 9(https://www.phoronix.com/scan.php?page=news_item&px=D9VK-Merges-Into-DXVK)/10/11  
 > VKD3D : DirectX 12
 
-- https://mesamatrix.net/
-- https://www.game-debate.com/news/20774/id-software-using-directx-12-over-vulkan-literally-makes-no-sense
-- https://www.gamingonlinux.com/2022/02/6-years-on-the-vulkan-api-has-enabled-some-amazing-things/
-- https://store.steampowered.com/news/group/4145017/view/3104663180636096966
+> A ranger :  
+> https://mesamatrix.net/  
+> https://www.game-debate.com/news/20774/id-software-using-directx-12-over-vulkan-literally-makes-no-sense  
+> https://www.gamingonlinux.com/2022/02/6-years-on-the-vulkan-api-has-enabled-some-amazing-things/  
+> https://store.steampowered.com/news/group/4145017/view/3104663180636096966  
 
-Nvidia driver : nouveau/nvk (driver open source historique), nova (driver open source développé par Red Hat), kernel module (pas de nom, mais c'est open source et développé par Nvidia)
-https://www.gamingonlinux.com/2024/07/dxvk-24-brings-d8vk-for-direct3d-8-support-frame-rate-limiter-adjustments-lots-of-game-fixes/
-https://developer.nvidia.com/blog/nvidia-transitions-fully-towards-open-source-gpu-kernel-modules/
+> Nvidia :  
+> Nvidia driver : nouveau/nvk (driver open source historique), nova (driver open source développé par Red Hat), kernel module (pas de nom, mais c'est open source et développé par Nvidia)  
+> https://www.gamingonlinux.com/2024/07/dxvk-24-brings-d8vk-for-direct3d-8-support-frame-rate-limiter-adjustments-lots-of-game-fixes/  
+> https://developer.nvidia.com/blog/nvidia-transitions-fully-towards-open-source-gpu-kernel-modules/  
 
-> Umu / ULWGL (SteamRuntime hors de Steam)
+> Umu / ULWGL (SteamRuntime hors de Steam) :  
 > 21/01/2024 : https://github.com/GloriousEggroll/ULWGL/commit/f8d3e7df6e7d3fcf466bf0fb26bf38e55df40ffe
