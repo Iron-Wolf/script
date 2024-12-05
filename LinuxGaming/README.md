@@ -78,3 +78,6 @@ gitGraph TB:
 Nvidia driver : nouveau/nvk (driver open source historique), nova (driver open source développé par Red Hat), kernel module (pas de nom, mais c'est open source et développé par Nvidia)
 https://www.gamingonlinux.com/2024/07/dxvk-24-brings-d8vk-for-direct3d-8-support-frame-rate-limiter-adjustments-lots-of-game-fixes/
 https://developer.nvidia.com/blog/nvidia-transitions-fully-towards-open-source-gpu-kernel-modules/
+
+> Umu / ULWGL (SteamRuntime hors de Steam)
+> 21/01/2024 : https://github.com/GloriousEggroll/ULWGL/commit/f8d3e7df6e7d3fcf466bf0fb26bf38e55df40ffe
