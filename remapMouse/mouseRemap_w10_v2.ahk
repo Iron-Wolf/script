@@ -19,31 +19,11 @@
 ; +--------------+
 ; | TROUBLESHOOT |
 ; +--------------+
-; SendMode Input
-; --------------
-; Initialy used "SendMode Input" but this buffer any input during the send action.
-; This result in some buggy behaviour (auto scroll is triggered even though the button is
-; physicaly released).
-; Aditionnaly, "Send" has to be used in Blind mode to avoid releasing hotkeys (Ctrl/Shift/...)
-; Example : Send {Blind}{WheelDown}
-; 
-; Without the "Blind" mode, we used to have strange behaviour with the "Shift" key :
-;                ┌ press                         ┌ release
-;   Sample : 0000100000000000111111011111111111110000000
-;                 └────┬────┘      └ random "0" 
-;               key is held, but "0" are returned anyway
+; Maybe a finaly working solution.
+; Using loops with Sleep(1) kind of work.
+; This call also seems to work (but not cross platform ?) : DllCall("Sleep", "UInt", 150)
 ;
-; Those problems are resolved with the "Click" command.
-;
-; Shift click
-; -----------
-; Old code used to detect the state of the SHIFT button.
-; This code is not needed after all, we keep it 
-; for futur reference (if needed).
-;
-;  if (GetKeyState("Shift", "P")) {
-;    Click, WheelRight
-;  }
+; The previous design with a Sleep(150) was borked.
 
 
 ; +-------+
@@ -55,54 +35,24 @@ Persistent ; Will not exit automatically (you can use its tray icon to open the 
 
 ; help for debug
 ; -------------
-;ListVars                    ; debug window
-;MsgBox(You pressed mouseUp) ; message box
+;ListVars                      ; debug window
+;MsgBox("You pressed mouseUp") ; message box
 
 ; VARIABLES
 ; ---------
-autoScrollSleep := 150 ;time before auto scroll (milliseconds)
+autoScrollSleep := 10 ;time before auto-scroll
 autoScrollInterval := 50 ;use it to control scroll speed (milliseconds)
 keepScroll := false
 
 
-;while(true) {
-;    isB1 := GetKeyState("XButton1", "P")
-;    isB2 := GetKeyState("XButton2", "P")
-;    if (isB1) {
-;        MouseClick("WheelDown")
-;        sleep 100
-;    }
-;    else if (isB2) {
-;        MouseClick("WheelUp")
-;        sleep 100
-;    }
-;}
-
 ; +------+
 ; | MAIN |
 ; +------+
-
-; Details : 
-;   this function execute a scroll when the FIRSTACTION button
-;   is pressed.
-; Parameters :
-;   firstAction : primary action to execute (the scroll direction)
-;   keepLoop :    reference to a boolean that stop the WHILE loop
-; Notes :
-;   Click function does not support "expression" so variables must be
-;   enclosed in percents signs
-scrollFunction(firstAction) {
-    MouseClick(firstAction)
-    sleep autoScrollSleep
-
-    ; retrieve the physical (P) state of the button
-    ;isKeyDown := GetKeyState("XButton1", "P") || GetKeyState("XButton2", "P")
-    while (keepScroll) {
-        ;isKeyDown := false
-        MouseClick(firstAction)
-        sleep autoScrollInterval
-        ;isKeyDown := GetKeyState("XButton1", "P") || GetKeyState("XButton2", "P")
-    }
+scrollUp() {
+    MouseClick("WheelUp")
+}
+scrollDwn() {
+    MouseClick("WheelDown")
 }
 
 ; Mouse Down
@@ -113,18 +63,19 @@ $XButton1::
 $+XButton1::
 $^XButton1::
 {
-    global keepScroll := true
-    scrollFunction("WheelDown")
+	; first press
+	scrollDwn()
+	
+	; wait before auto-scroll
+	Loop autoScrollSleep {
+        Sleep(1)
+    }
+	SetTimer(scrollDwn, autoScrollInterval)
+	
+	; wait release
+	KeyWait("XButton1")
+	SetTimer(scrollDwn, 0)
 }
-
-$XButton1 up::
-$+XButton1 up::
-$^XButton1 up::
-{
-    ; stop auto scroll when released (button is UP)
-    global keepScroll := false
-}
-
 
 ; Mouse Up
 ; --------
@@ -134,16 +85,18 @@ $XButton2::
 $+XButton2::
 $^XButton2::
 {
-    global keepScroll := true
-    scrollFunction("WheelUp")
-}
-
-$XButton2 up::
-$+XButton2 up::
-$^XButton2 up::
-{
-    ; stop auto scroll when released (button is UP)
-    global keepScroll := false
+	; first press
+	scrollUp()
+	
+	; wait before auto-scroll
+	Loop autoScrollSleep {
+        Sleep(1)
+    }
+	SetTimer(scrollUp, autoScrollInterval)
+	
+	; wait release
+	KeyWait("XButton2")
+	SetTimer(scrollUp, 0)
 }
 
 
