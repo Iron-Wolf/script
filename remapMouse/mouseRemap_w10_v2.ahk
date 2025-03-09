@@ -19,11 +19,17 @@
 ; +--------------+
 ; | TROUBLESHOOT |
 ; +--------------+
-; Maybe a finaly working solution.
-; Using loops with Sleep(1) kind of work.
-; This call also seems to work (but not cross platform ?) : DllCall("Sleep", "UInt", 150)
+; This script DOES NOT WORK as expected.
+; Sometimes, AHK V2 will bug :
+;  - in the "while" loop, we release the side button
+;  - the OS function is triggered (a tab scroll in the browser, for example)
+;    - this should never be triggered (or, there is something I don't understand...)
+;  - as we "escaped" the script, we are in an infinite scrolling loop
+;    - in this state, the "GetKeyState("XButton1", "P")" is buggy (return 1 instead of 0, as the button is not held)
+;    - the "KeyWait" is never reached
+;    - a "$XButton2 up::" block will also never be reached either
 ;
-; The previous design with a Sleep(150) was borked.
+; I don't have a solution for this, at the moment.
 
 
 ; +-------+
@@ -40,8 +46,8 @@ Persistent ; Will not exit automatically (you can use its tray icon to open the 
 
 ; VARIABLES
 ; ---------
-autoScrollSleep := 10 ;time before auto-scroll
-autoScrollInterval := 50 ;use it to control scroll speed (milliseconds)
+autoScrollDelay := 150 ;time before auto-scroll
+autoScrollInterval := 30 ;use it to control scroll speed (milliseconds)
 keepScroll := false
 
 
@@ -67,9 +73,7 @@ $^XButton1::
 	scrollDwn()
 	
 	; wait before auto-scroll
-	Loop autoScrollSleep {
-        Sleep(1)
-    }
+    Sleep(autoScrollDelay)
 	SetTimer(scrollDwn, autoScrollInterval)
 	
 	; wait release
@@ -89,9 +93,7 @@ $^XButton2::
 	scrollUp()
 	
 	; wait before auto-scroll
-	Loop autoScrollSleep {
-        Sleep(1)
-    }
+	Sleep(autoScrollDelay)
 	SetTimer(scrollUp, autoScrollInterval)
 	
 	; wait release
