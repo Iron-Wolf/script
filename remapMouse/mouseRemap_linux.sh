@@ -1,6 +1,14 @@
 #!/bin/bash
 # http://www.remycorthesy.fr/montpellier/symboles-codes-caracteres-ascii-iso.htm
 #
+# ==================================================================
+#                        /!\ WARNGING /!\
+#    THIS SCRIPT IS A MIXTURE OF THINGS THAT DON'T WORK WELL.
+#    IT IS NOT MAINTAINED AND HAS NOT BEEN BATTLE-TESTED.
+#    USE AT YOUR OWN DISCRETION.
+# ==================================================================
+#
+#
 # Basic explanation : https://askubuntu.com/a/492745
 # get device ID :   xinput
 # list all button : xinput list <ID>
