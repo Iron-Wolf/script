@@ -7,17 +7,35 @@
 ;    - simple clic to bring the process in front
 ;    - right clic for context menu
 
+;MyGuiA := Gui()  ; Créer une fenêtre GUI.
+;LV := MyGuiA.Add("ListView", "h300 w400", ["Icône & Processus", "Fenêtre"])
+;ImageListID := IL_Create(20)  ; Créer une ImageList pour stocker les icônes.
+;LV.SetImageList(ImageListID)
+;for hwnd in WinGetList() {
+;    if WinExist("ahk_id " hwnd) {
+;        pid := WinGetPID(hwnd)
+;        exePath := ProcessGetPath(pid)
+;        title := WinGetTitle(hwnd)
+;        
+;        if exePath && title {
+;            iconIndex := IL_Add(ImageListID, exePath, 1)  ; Ajouter l'icône du processus
+;            LV.Add("Icon" . iconIndex, exePath, title)
+;        }
+;    }
+;}
+;MyGuiA.Show()
+
 
 ; Create a GUI window
-MyGui := Gui("+OwnDialogs +Resize +AlwaysOnTop +ToolWindow")
-;MyGui.Opt("-Border")
+MyGui := Gui("+OwnDialogs +Resize +ToolWindow")
+;MyGui.Opt("+AlwaysOnTop -Border")
 
 ; Create some buttons
-Bcalendar := MyGui.Add("Button", "Default", "Calendar")
-Bswitch := MyGui.Add("Button", "x+5", "Switch View")
+;Brefresh := MyGui.Add("Button", "Default", "Refresh")
+;Bswitch := MyGui.Add("Button", "x+5", "Switch View")
 
 ; Create the ListView and its columns via Gui.Add
-LV := MyGui.AddListView("xm r5 w2000 sort", ["ahkTitle", "ahkId", "ahkClass"])
+LV := MyGui.AddListView("xm r5 w2000 sort", ["ahkTitle", "ahkId", "ahkProcess"])
 ; For sorting, indicate that the column is an integer
 LV.ModifyCol(2, "Integer")  
 
@@ -32,9 +50,11 @@ LV.SetImageList(ImageListID2)
 ; Apply control events
 LV.OnEvent("Click", ActiveWin)
 LV.OnEvent("ContextMenu", ShowContextMenu)
-Bcalendar.OnEvent("Click", UpdateProcess)
-Bswitch.OnEvent("Click", SwitchView)
+;Brefresh.OnEvent("Click", UpdateProcess)
+;Bswitch.OnEvent("Click", SwitchView)
 MyGui.OnEvent("Size", Gui_Size)
+MyGui.OnEvent("Close", CloseApp)
+MyGui.OnEvent("Escape", CloseApp)
 
 ; Create a popup menu to be used as the context menu
 ContextMenu := Menu()
@@ -46,30 +66,64 @@ ContextMenu.Default := "Open"  ; Make "Open" a bold font to indicate that double
 ; Display the window
 MyGui.Show("x0 y-20")
 UpdateProcess()
+SwitchView()
+
+UpdateActiveWindow() {
+    ; update process list
+    UpdateProcess()
+    
+    ; "A" for "Active" window : https://www.autohotkey.com/docs/v2/misc/WinTitle.htm#ActiveWindow
+    if not WinExist("A") {
+        return
+    }
+    activeWinID := WinGetID("A")
+    
+    ; start the first iteration at the top
+    totalRow := LV.GetCount()
+    Loop totalRow {
+        ; "A_Index" is an automatic variable containing current loop index
+        ahkId := LV.GetText(A_Index, 2)
+        if (IsNumber(ahkId) and ahkId == activeWinID) {
+            ;MsgBox("Active : " WinGetProcessName(activeWinID))
+            ; unselect all row
+            LV.Modify(0, "-Select")
+            LV.Modify(A_Index, "+Select")
+            ; exit the loop
+            break
+        }
+    }
+}
+SetTimer(UpdateActiveWindow, 300)
 
 
 UpdateProcess(*) {
     ; TODO : maybe usefull later ?
     static IconMap := Map()
 
-	; Improve performance by disabling redrawing during load.
+    ; Improve performance by disabling redrawing during load.
     LV.Opt("-Redraw")
-	
-	; clear remaining items (TODO : optimize this later)
-	LV.Delete()
-	
-	; Gather a list of running process (source : https://www.autohotkey.com/docs/v2/lib/WinGetList.htm)
+    
+    ; clear remaining items (TODO : optimize this later)
+    LV.Delete()
+    
+    ; Gather a list of running process (source : https://www.autohotkey.com/docs/v2/lib/WinGetList.htm)
     ids := WinGetList(,, "Program Manager")
     for thisId in ids {
-        ahkClass := WinGetClass(thisId)
+        ahkProcess := WinGetProcessName(thisId)
         ahkTitle := WinGetTitle(thisId)
-		if(ahkTitle != "") {
-			LV.Add("Icon" . A_Index, ahkTitle, thisId, ahkClass)
-		}
+        pid := WinGetPID(thisId)
+        exePath := ProcessGetPath(pid)
+        
+        if(ahkTitle != "" and ahkTitle != "task_bar_v2.ahk") {
+            ; Ajouter l'icône du processus
+            iconIndex := IL_Add(ImageListID1, exePath, 1)
+            IL_Add(ImageListID2, exePath, 1)
+            LV.Add("Icon" . iconIndex, ahkTitle, thisId, ahkProcess)
+        }
     }
 
     LV.Opt("+Redraw")  ; Re-enable redrawing (it was disabled above).
-    LV.ModifyCol()  ; Auto-size each column to fit its contents.
+    ;LV.ModifyCol()  ; Auto-size each column to fit its contents.
     ;LV.ModifyCol(1, 60)  ; Make the Size column at little wider to reveal its header.
 }
 
@@ -88,8 +142,8 @@ ActiveWin(LV, RowNumber) {
     ;MsgBox("Selected " ahkId " (rownum " RowNumber ")")
     
     ; https://www.autohotkey.com/docs/v2/misc/WinTitle.htm#ahk_id
-    if (IsNumber(ahkId)) {
-        WinActivate Integer(ahkId)
+    if (IsNumber(ahkId) and WinExist(Integer(ahkId))) {
+        WinActivate(Integer(ahkId))
     }
 }
 
@@ -140,3 +194,9 @@ Gui_Size(thisGui, MinMax, Width, Height) {
     ; Otherwise, the window has been resized or maximized. Resize the ListView to match.
     LV.Move(,, Width - 20, Height - 40)
 }
+
+CloseApp(*) {
+    MyGui.Destroy()
+    ExitApp 
+}
+
