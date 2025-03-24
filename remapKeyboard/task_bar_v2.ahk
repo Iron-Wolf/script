@@ -5,6 +5,7 @@
 ;  - button with a calendar
 ;  - list view with user's running process
 ;    - simple clic to bring the process in front
+;    - if window is already active, minimize it
 ;    - right clic for context menu
 
 ;MyGuiA := Gui()  ; Créer une fenêtre GUI.
@@ -37,9 +38,9 @@ MyGui.MarginY := 0
 ;Bswitch := MyGui.Add("Button", "x+5", "Switch View")
 
 ; Create the ListView and its columns via Gui.Add
-LV := MyGui.AddListView("r5 w2000 sort", ["ahkTitle", "ahkId", "ahkProcess"])
+LV := MyGui.AddListView("r3 w2000", ["ahkTitle", "ahkId", "ahkProcess"])
 ; For sorting, indicate that the column is an integer
-LV.ModifyCol(2, "Integer")  
+LV.ModifyCol(2, "Integer")
 
 ; Create an ImageList so that the ListView can display some icons
 ImageListID1 := IL_Create(10)
@@ -124,6 +125,9 @@ UpdateProcess(*) {
         }
     }
 
+    ; apply the "Sort" after the list items
+    ; any subsequently added rows will appear at the bottom of the list
+    LV.ModifyCol(3, "Sort")
     LV.Opt("+Redraw")  ; Re-enable redrawing (it was disabled above).
     ;LV.ModifyCol()  ; Auto-size each column to fit its contents.
     ;LV.ModifyCol(1, 60)  ; Make the Size column at little wider to reveal its header.
