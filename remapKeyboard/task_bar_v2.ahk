@@ -28,6 +28,8 @@
 
 ; Create a GUI window
 MyGui := Gui("+OwnDialogs +Resize +ToolWindow")
+MyGui.MarginX := 0
+MyGui.MarginY := 0
 ;MyGui.Opt("+AlwaysOnTop -Border")
 
 ; Create some buttons
@@ -35,7 +37,7 @@ MyGui := Gui("+OwnDialogs +Resize +ToolWindow")
 ;Bswitch := MyGui.Add("Button", "x+5", "Switch View")
 
 ; Create the ListView and its columns via Gui.Add
-LV := MyGui.AddListView("xm r5 w2000 sort", ["ahkTitle", "ahkId", "ahkProcess"])
+LV := MyGui.AddListView("r5 w2000 sort", ["ahkTitle", "ahkId", "ahkProcess"])
 ; For sorting, indicate that the column is an integer
 LV.ModifyCol(2, "Integer")  
 
@@ -64,7 +66,7 @@ ContextMenu.Add("Clear from ListView", ContextClearRows)
 ContextMenu.Default := "Open"  ; Make "Open" a bold font to indicate that double-click does the same thing.
 
 ; Display the window
-MyGui.Show("x0 y-20")
+MyGui.Show("x0 y-30")
 UpdateProcess()
 SwitchView()
 
@@ -191,8 +193,9 @@ ContextClearRows(*) {
 Gui_Size(thisGui, MinMax, Width, Height) {
     if MinMax = -1  ; The window has been minimized. No action needed.
         return
-    ; Otherwise, the window has been resized or maximized. Resize the ListView to match.
-    LV.Move(,, Width - 20, Height - 40)
+    ; Otherwise, the window has been resized or maximized. 
+    ; Resize the ListView to match ALL the space
+    LV.Move(0, 0, Width, Height)
 }
 
 CloseApp(*) {
