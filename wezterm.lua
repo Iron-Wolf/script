@@ -12,7 +12,6 @@ local config = wezterm.config_builder()
 
 
 
-
 -- (This is where our config will go)
 --config.color_scheme = 'Tokyo Night'
 config.color_scheme = 'Material (base16)'
