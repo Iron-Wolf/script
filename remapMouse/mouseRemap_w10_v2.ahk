@@ -42,21 +42,21 @@
 ; +-------+
 ; | SETUP |
 ; +-------+
-;#Warn  ; Enable warnings to assist with detecting common errors.
-#SingleInstance Force
-Persistent ; Will not exit automatically (you can use its tray icon to open the script)
-SendMode("Event") ; doc here : https://www.autohotkey.com/docs/v2/lib/Send.htm
-SetMouseDelay(-1) ; disable the default delay between click, we handle it already
+;#Warn                ; Enable warnings to assist with detecting common errors.
+#SingleInstance Force ; Skips the dialog box and replaces the old instance automatically.
+Persistent            ; Will not exit automatically (you can use its tray icon to open the script)
+SendMode("Event")     ; doc here : https://www.autohotkey.com/docs/v2/lib/Send.htm
+SetMouseDelay(-1)     ; disable the default delay between click, we handle it already
 
 ; help for debug
 ; -------------
-;ListVars                      ; debug window
-;MsgBox("You pressed mouseUp") ; message box
+;ListVars             ; debug window
+;MsgBox("a msg")      ; message box
 
 ; VARIABLES
 ; ---------
-autoScrollDelay := 150 ;time before auto-scroll
-autoScrollInterval := 30 ;use it to control scroll speed (milliseconds)
+asDelay := 150        ; time before starting auto-scroll
+asSpeed := 30         ; during auto-scroll : time (milliseconds) to wait between each scroll
 
 
 ; +------+
@@ -81,8 +81,8 @@ $^XButton1::
     scrollDwn()
     
     ; wait before auto-scroll
-    Sleep(autoScrollDelay)
-    SetTimer(scrollDwn, autoScrollInterval)
+    Sleep(asDelay)
+    SetTimer(scrollDwn, asSpeed)
     
     ; wait release
     KeyWait("XButton1")
@@ -94,7 +94,7 @@ $^XButton1::
     ;scrollDwn()
     ;
     ;; wait before fixed auto-scroll
-    ;Sleep(autoScrollDelay)
+    ;Sleep(asDelay)
     ;if (!GetKeyState("XButton1", "P")) {
     ;    return
     ;}
@@ -102,7 +102,7 @@ $^XButton1::
     ;BlockInput(true)
     ;Loop 10 {
     ;    scrollDwn()
-    ;	Sleep(autoScrollInterval)
+    ;	Sleep(asSpeed)
     ;}
     ;BlockInput(false)
 }
@@ -119,8 +119,8 @@ $^XButton2::
     scrollUp()
     
     ; wait before auto-scroll
-    Sleep(autoScrollDelay)
-    SetTimer(scrollUp, autoScrollInterval)
+    Sleep(asDelay)
+    SetTimer(scrollUp, asSpeed)
     
     ; wait release
     KeyWait("XButton2")
