@@ -15,6 +15,7 @@ local config = wezterm.config_builder()
 -- (This is where our config will go)
 --config.color_scheme = 'Tokyo Night'
 config.color_scheme = 'Material (base16)'
+config.enable_scroll_bar = true
 config.font_size = 12
 config.initial_cols = 100
 config_initial_rows = 24
