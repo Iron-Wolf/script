@@ -27,6 +27,8 @@
 ;MyGuiA.Show()
 
 
+#SingleInstance Force
+
 ; Create a GUI window
 MyGui := Gui("+OwnDialogs +Resize +ToolWindow")
 MyGui.MarginX := 0
@@ -43,8 +45,8 @@ LV := MyGui.AddListView("r3 w2000", ["ahkTitle", "ahkId", "ahkProcess"])
 LV.ModifyCol(2, "Integer")
 
 ; Create an ImageList so that the ListView can display some icons
-ImageListID1 := IL_Create(10)
-ImageListID2 := IL_Create(10, 10, true)  ; A list of large icons to go with the small ones.
+ImageListID1 := IL_Create()
+ImageListID2 := IL_Create(,, true)  ; A list of large icons to go with the small ones.
 
 ; Attach the ImageLists to the ListView so that it can later display the icons
 LV.SetImageList(ImageListID1)
@@ -70,6 +72,7 @@ ContextMenu.Default := "Open"  ; Make "Open" a bold font to indicate that double
 MyGui.Show("x0 y-30")
 UpdateProcess()
 SwitchView()
+global globActiveWinID := -1
 
 UpdateActiveWindow() {
     ; update process list
@@ -79,17 +82,24 @@ UpdateActiveWindow() {
     if not WinExist("A") {
         return
     }
+    
     activeWinID := WinGetID("A")
+    if (WinGetTitle(activeWinID) != "task_bar_v2.ahk") {
+        ; the window is not the task bar,
+        ; set the variable for other methods
+        global globActiveWinID := WinGetID("A")
+    }
     
     ; start the first iteration at the top
     totalRow := LV.GetCount()
     Loop totalRow {
         ; "A_Index" is an automatic variable containing current loop index
         ahkId := LV.GetText(A_Index, 2)
-        if (IsNumber(ahkId) and ahkId == activeWinID) {
-            ;MsgBox("Active : " WinGetProcessName(activeWinID))
+        if (IsNumber(ahkId) and ahkId == globActiveWinID) {
+            ;MsgBox("Active : " WinGetProcessName(globActiveWinID))
             ; unselect all row
             LV.Modify(0, "-Select")
+            ; select current row
             LV.Modify(A_Index, "+Select")
             ; exit the loop
             break
@@ -117,11 +127,17 @@ UpdateProcess(*) {
         pid := WinGetPID(thisId)
         exePath := ProcessGetPath(pid)
         
-        if(ahkTitle != "" and ahkTitle != "task_bar_v2.ahk") {
+        if (ahkTitle != "" and ahkTitle != "task_bar_v2.ahk") {
             ; Ajouter l'icône du processus
             iconIndex := IL_Add(ImageListID1, exePath, 1)
             IL_Add(ImageListID2, exePath, 1)
-            LV.Add("Icon" . iconIndex, ahkTitle, thisId, ahkProcess)
+            
+            ahkTitleSmall := SubStr(ahkTitle, 1, 10)
+            ; si le titre est trop long, on ajout un marqueur
+            if (StrLen(ahkTitle) > 9)
+                ahkTitleSmall := ahkTitleSmall . "..."
+            
+            LV.Add("Icon" . iconIndex, ahkTitleSmall, thisId, ahkProcess)
         }
     }
 
@@ -142,14 +158,21 @@ SwitchView(*) {
     IconView := not IconView   ; Invert in preparation for next time.
 }
 
+; click on item
 ActiveWin(LV, RowNumber) {
-    ; Get the text of the first field
+    ; Get the text of the 2nd field
     ahkId := LV.GetText(RowNumber, 2)
     ;MsgBox("Selected " ahkId " (rownum " RowNumber ")")
     
     ; https://www.autohotkey.com/docs/v2/misc/WinTitle.htm#ahk_id
     if (IsNumber(ahkId) and WinExist(Integer(ahkId))) {
-        WinActivate(Integer(ahkId))
+        if (Integer(ahkId) == globActiveWinID) {
+            WinMinimize(Integer(ahkId))
+            global globActiveWinID := -1
+        } else {
+            WinActivate(Integer(ahkId))
+            global globActiveWinID := Integer(ahkId)
+        }
     }
 }
 
