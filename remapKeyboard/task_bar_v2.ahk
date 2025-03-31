@@ -28,6 +28,9 @@
 
 
 #SingleInstance Force
+; use the screen to compute the mouse position
+; (https://www.autohotkey.com/docs/v2/lib/CoordMode.htm)
+CoordMode("Mouse", "Screen")
 
 ; Create a GUI window
 MyGui := Gui("+OwnDialogs +Resize +ToolWindow")
@@ -106,7 +109,7 @@ UpdateActiveWindow() {
         }
     }
 }
-SetTimer(UpdateActiveWindow, 300)
+;SetTimer(UpdateActiveWindow, 300)
 
 
 UpdateProcess(*) {
@@ -215,6 +218,29 @@ ContextClearRows(*) {
         LV.Delete(RowNumber)  ; Clear the row from the ListView.
     }
 }
+
+CheckMouse() {
+    global MyGui  ; On récupère la GUI
+
+    ; Récupérer la position de la souris
+    MouseGetPos(&MouseX, &MouseY, &WinID)
+    
+    ; Récupérer la position et taille de la fenêtre
+    MyGui.GetPos(&WinX, &WinY, &WinW, &WinH)
+    
+    ; Vérifier si la souris est sur la fenêtre
+    if (WinID = MyGui.Hwnd || MouseY <= 5) {
+        MyGui.Show("NoActivate")  ; Affiche sans activer la fenêtre
+		UpdateActiveWindow()
+    } else {
+        MyGui.Hide()  ; Cache la fenêtre si la souris est ailleurs
+    }
+}
+; Lancer la vérification de la souris toutes les 100ms
+SetTimer(CheckMouse, 100)
+
+;  left side and the top of the virtual screen (https://www.autohotkey.com/docs/v2/lib/SysGet.htm)
+;MsgBox SysGet(76) " x " SysGet(77)
 
 ; Expand/Shrink ListView in response to the user's resizing
 Gui_Size(thisGui, MinMax, Width, Height) {
