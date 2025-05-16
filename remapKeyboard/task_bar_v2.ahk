@@ -36,7 +36,8 @@ CoordMode("Mouse", "Screen")
 MyGui := Gui("+OwnDialogs +Resize +ToolWindow")
 MyGui.MarginX := 0
 MyGui.MarginY := 0
-;MyGui.Opt("+AlwaysOnTop -Border")
+MyGui.Opt("+AlwaysOnTop")
+;MyGui.Opt("-Border")
 
 ; Create some buttons
 ;Brefresh := MyGui.Add("Button", "Default", "Refresh")
@@ -130,12 +131,15 @@ UpdateProcess(*) {
         pid := WinGetPID(thisId)
         exePath := ProcessGetPath(pid)
         
-        if (ahkTitle != "" and ahkTitle != "task_bar_v2.ahk") {
+        if (ahkTitle != "" 
+            and ahkTitle != "task_bar_v2.ahk"
+            and ahkTitle != "Pulse Secure"
+            and !InStr(ahkTitle, "JamPostMessage")) {
             ; Ajouter l'icône du processus
             iconIndex := IL_Add(ImageListID1, exePath, 1)
             IL_Add(ImageListID2, exePath, 1)
             
-            ahkTitleSmall := SubStr(ahkTitle, 1, 10)
+            ahkTitleSmall := SubStr(ahkTitle, 1, 20)
             ; si le titre est trop long, on ajout un marqueur
             if (StrLen(ahkTitle) > 9)
                 ahkTitleSmall := ahkTitleSmall . "..."
