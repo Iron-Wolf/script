@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Source : https://github.com/YouHaveTrouble/minecraft-optimization
+# Some links : 
+#  - https://github.com/YouHaveTrouble/minecraft-optimization
+#  - https://github.com/TheUsefulLists/UsefulMods
+
 
 # move in folder
 cd fabric_jdk-21.0.7+6
