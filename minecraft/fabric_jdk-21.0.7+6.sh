@@ -3,6 +3,7 @@
 # Some links : 
 #  - https://github.com/YouHaveTrouble/minecraft-optimization
 #  - https://github.com/TheUsefulLists/UsefulMods
+#  - https://github.com/Mukul1127/Minecraft-Java-Flags
 
 
 # move in folder
