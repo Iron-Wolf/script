@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Showcase Cartes Pokémon Holo 3D (Premium)</title>
+<style>
+  :root {
+    /* 🎛️ Variables globales */
+    --max-tilt: 25deg;
+    --hover-scale: 1.15;
+    --holo-opacity: 0.05;
+    --holo-strength: 0.95;
+    --holo-color1: rgba(255,0,150,0.5); 
+    --holo-color2: rgba(0,200,255,0.5);
+    --holo-color3: rgba(255,255,0,0.5);
+
+    --shine-size: 150px;
+    --shine-opacity: 0.25;
+
+    --return-speed: 0.15s;
+    --anim-speed: 0.3s;
+    /* --- */
+    --card-aspect: 0.718;
+    --card-radius: 4.55% / 3.5%;
+    --card-edge: hsl(47, 100%, 78%);
+    --card-back: hsl(205, 100%, 25%);
+    --card-glow: hsl(175, 100%, 90%);
+    --sunpillar-1: hsl(2, 100%, 73%);
+    --sunpillar-2: hsl(53, 100%, 69%);
+    --sunpillar-3: hsl(93, 100%, 69%);
+    --sunpillar-4: hsl(176, 100%, 76%);
+    --sunpillar-5: hsl(228, 100%, 74%);
+    --sunpillar-6: hsl(283, 100%, 73%);
+    --sunpillar-1: hsl(2, 100%, 73%);
+    --sunpillar-2: hsl(53, 100%, 69%);
+    --sunpillar-3: hsl(93, 100%, 69%);
+    --sunpillar-4: hsl(176, 100%, 76%);
+    --sunpillar-5: hsl(228, 100%, 74%);
+    --sunpillar-6: hsl(283, 100%, 73%);
+    --sunpillar-clr-1: var(--sunpillar-1);
+    --sunpillar-clr-2: var(--sunpillar-2);
+    --sunpillar-clr-3: var(--sunpillar-3);
+    --sunpillar-clr-4: var(--sunpillar-4);
+    --sunpillar-clr-5: var(--sunpillar-5);
+    --sunpillar-clr-6: var(--sunpillar-6);
+    /*--pointer-x: 50%;
+    --pointer-y: 50%;*/
+    /*--pointer-from-center: 0;
+    --pointer-from-top: 0.5;
+    --pointer-from-left: 0.5;
+    --card-opacity: 0;
+    --rotate-x: 0deg;
+    --rotate-y: 0deg;*/
+    /*--background-x: 50%;
+    --background-y: 50%;*/
+    /*--card-scale: 1;
+    --translate-x: 0px;
+    --translate-y: 0px;*/
+  }
+
+  body {
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    margin: 0;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    width: 100%;
+  }
+
+  .card {
+    width: 100%;
+    aspect-ratio: 300 / 420;
+    perspective: 1000px;
+  }
+
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rotateX, 0deg)) rotateY(var(--rotateY, 0deg)) scale(var(--scale, 1));
+    transition: transform var(--anim-speed) ease-out;
+    position: relative;
+  }
+
+  .card-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  }
+
+  .card-face img {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    display: block;
+  }
+
+  /* Effet holo */
+  .holo {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(var(--holo-angle, 45deg),
+      var(--holo-color1),
+      var(--holo-color2),
+      var(--holo-color3));
+    mix-blend-mode: overlay;
+    opacity: var(--current-holo-opacity, var(--holo-opacity));
+    pointer-events: none;
+    border-radius: inherit;
+    transition: opacity var(--anim-speed) ease-out;
+  }
+
+  .holo-v{
+    position: absolute;
+    inset: 0;
+    filter: brightness(.7) contrast(2) saturate(.5);
+  }
+
+  .holo-v,
+  .holo-v::after {
+    --grain: url("https://poke-holo.simey.me/img/grain.webp");
+    --space: 5%;
+    --angle: 133deg;
+    --imgsize: 500px;
+    background-image: 
+      var(--grain), 
+      repeating-linear-gradient( 0deg, 
+        var(--sunpillar-clr-1) calc(var(--space)*1), 
+        var(--sunpillar-clr-2) calc(var(--space)*2), 
+        var(--sunpillar-clr-3) calc(var(--space)*3),
+        var(--sunpillar-clr-4) calc(var(--space)*4),
+        var(--sunpillar-clr-5) calc(var(--space)*5),
+        var(--sunpillar-clr-6) calc(var(--space)*6), 
+        var(--sunpillar-clr-1) calc(var(--space)*7) ), 
+      repeating-linear-gradient( 
+        var(--angle), 
+        #0e152e 0%, 
+        hsl(180, 10%, 60%) 3.8%, 
+        hsl(180, 29%, 66%) 4.5%, 
+        hsl(180, 10%, 60%) 5.2%, 
+        #0e152e 10% , 
+        #0e152e 12% ), 
+      radial-gradient( 
+        farthest-corner circle at var(--pointer-x) var(--pointer-y), 
+        hsla(0, 0%, 0%, 0.1) 12%, 
+        hsla(0, 0%, 0%, 0.15) 20%, 
+        hsla(0, 0%, 0%, 0.25) 120% );
+    background-blend-mode: screen, hue, hard-light;
+    background-size: var(--imgsize) 100%, 200% 700%, 300% 100%, 200% 100%;
+    background-position: center, 
+      0% var(--background-y), 
+      var(--background-x) var(--background-y), 
+      var(--background-x) var(--background-y);
+    filter: brightness(.8) contrast(2.95) saturate(.65);
+  }
+
+  .holo-v,
+  .holo-v::after {
+    content: "";
+    background-position: center, 
+      0% var(--background-y), 
+      calc( var(--background-x) * -1) calc( var(--background-y) * -1), 
+      var(--background-x) var(--background-y);
+    background-size: var(--imgsize) 100%, 200% 400%, 195% 100%, 200% 100%;
+    filter: brightness(1) contrast(2.5) saturate(1.75);
+    mix-blend-mode: soft-light;
+  }
+
+  /* Effet shine (reflet lumineux) */
+  .shine {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle var(--shine-size) at var(--shine-x, 50%) var(--shine-y, 50%),
+      rgba(255,255,255,var(--shine-opacity)),
+      transparent 70%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity var(--anim-speed) ease-out;
+  }
+</style>
+</head>
+<body>
+
+
+<!-- https://api.pokemontcg.io/v2/cards?q=name:Metagross -->
+<div class="gallery">
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh12/12_hires.png">
+    <div class="holo-v"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <!-- Rayquaza/Rayquaza -->
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh7/110_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/xy7/98_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <!-- Groudon/Groudon -->
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/xy5/85_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/xy5/151_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <!-- Entei/Entei -->
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh9/22_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <!-- Drattak/Salamence -->
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh3/143_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh3/144_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/xyp/XY171_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <!-- Métalosse/Metagross -->
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh6/181_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh6/113_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/xyp/XY35_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <!-- Braségali/Blaziken -->
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh6/20_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh6/21_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/xyp/XY86_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <!-- Kaimorse/Walrein -->
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/bw6/31_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+
+  <!-- Wailord/Wailord -->
+  <div class="card"><div class="card-inner"><div class="card-face">
+    <img src="https://images.pokemontcg.io/swsh35/13_hires.png">
+    <div class="holo"></div>
+    <div class="shine"></div>
+  </div></div></div>
+</div>
+
+<script>
+
+  /* source : 
+  https://github.com/simeydotme/pokemon-cards-css/blob/main/src/lib/helpers/Math.js
+  */
+  const round = (value, precision = 3) => parseFloat(value.toFixed(precision));
+
+  const clamp = (value, min = 0, max = 100 ) => {
+	  return Math.min(Math.max(value, min), max);
+  };
+
+  const adjust = (value, fromMin, fromMax, toMin, toMax) => {
+	  return round(toMin + (toMax - toMin) * (value - fromMin) / (fromMax - fromMin));
+  };
+
+  document.querySelectorAll('.card').forEach(card => {
+    const inner = card.querySelector('.card-inner');
+    const holo = card.querySelector('.holo');
+    const holoV = card.querySelector('.holo-v');
+    const shine = card.querySelector('.shine');
+
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const tiltAmount = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--max-tilt'));
+      const rotateY = -((x - centerX) / centerX) * tiltAmount;
+      const rotateX = ((y - centerY) / centerY) * tiltAmount;
+
+      inner.style.setProperty('--rotateX', rotateX + 'deg');
+      inner.style.setProperty('--rotateY', rotateY + 'deg');
+      inner.style.setProperty('--scale', getComputedStyle(document.documentElement).getPropertyValue('--hover-scale'));
+
+      const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
+      inner.style.setProperty('--holo-angle', angle + 'deg');
+
+      // Intensité holo
+      const distanceX = Math.abs((x - centerX) / centerX);
+      const distanceY = Math.abs((y - centerY) / centerY);
+      const distance = Math.min(1, Math.sqrt(distanceX**2 + distanceY**2));
+      const baseOpacity = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--holo-opacity'));
+      const extraOpacity = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--holo-strength')) * distance;
+      
+      if (holo != null)
+        holo.style.setProperty('--current-holo-opacity', baseOpacity + extraOpacity);
+
+      // Shine position + affichage
+      shine.style.setProperty('--shine-x', `${x}px`);
+      shine.style.setProperty('--shine-y', `${y}px`);
+      shine.style.opacity = 1;
+
+      // TEST
+      //const $el = e.target;
+      //const rect = $el.getBoundingClientRect(); // get element's current size/position
+      const absolute = {
+        x: e.clientX - rect.left, // get mouse position from left
+        y: e.clientY - rect.top, // get mouse position from right
+      };
+      const percent = {
+        x: clamp(round((100 / rect.width) * absolute.x)),
+        y: clamp(round((100 / rect.height) * absolute.y)),
+      };
+      const center = {
+        x: percent.x - 50,
+        y: percent.y - 50,
+      };
+      //console.log("BACKGROUND " +
+      //  "{x:" + adjust(percent.x, 0, 100, 37, 63) + 
+      //  ", y:" + adjust(percent.y, 0, 100, 33, 67) + "}");
+
+      //console.log("GLARE " +
+      //  "{px:" + round(percent.x) +
+      //  ", py:" + round(percent.y) + "}");
+
+      //console.log("ROTATE " +
+      //  "{cx:" + round(-(center.x / 3.5)) +
+      //  ", cy:" + round(center.y / 2) + "}");
+      
+      inner.style.setProperty('--pointer-x', `${round(percent.x)}%`);
+      inner.style.setProperty('--pointer-y', `${round(percent.y)}%`);
+      inner.style.setProperty('--background-x', `${adjust(percent.x, 0, 100, 37, 63)}%`);
+      inner.style.setProperty('--background-y', `${adjust(percent.y, 0, 100, 33, 67)}%`);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      inner.style.setProperty('--rotateX', '0deg');
+      inner.style.setProperty('--rotateY', '0deg');
+      inner.style.setProperty('--scale', '1');
+      inner.style.setProperty('--holo-angle', '45deg');
+      if (holo != null) 
+        holo.style.setProperty('--current-holo-opacity', getComputedStyle(document.documentElement).getPropertyValue('--holo-opacity'));
+
+      shine.style.opacity = 0;
+
+      inner.style.setProperty('--pointer-x', '50%');
+      inner.style.setProperty('--pointer-y', '50%');
+      inner.style.setProperty('--background-x', '50%');
+      inner.style.setProperty('--background-y', '50%');
+    
+    });
+  });
+</script>
+
+</body>
+</html>
