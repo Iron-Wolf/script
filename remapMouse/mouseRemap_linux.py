@@ -18,7 +18,6 @@ import subprocess
 import re #regex
 
 # Change these options according to your needs
-MOUSE_ID = '14' # get your ID with the command : xinput
 MOUSE_MAPPING = '1 2 3 4 5 6 7 0 0'
 AUTO_SCROLL_STEP = 10 # time before auto scroll
 AUTO_SCROLL_INTERVAL = 30 # control auto scroll speed (milliseconds)
@@ -57,7 +56,7 @@ b9 : side-forward
 Get the actual physical state
 of the given button
 """
-def butonState(button):
+def butonState(button: str, mouse_id: str):
   # for python < 3.7
   #result = subprocess.run(["xinput", "--query-state", "12"], stdout=subprocess.PIPE, universal_newlines=True)
   # for python >= 3.7
@@ -67,7 +66,7 @@ def butonState(button):
   # captured output is returned as bytes
   # use "universal_newlines=True" ("text=True" for python >= 3.7)
   # to capture as text
-  result = subprocess.check_output(["xinput", "--query-state", MOUSE_ID], 
+  result = subprocess.check_output(["xinput", "--query-state", mouse_id], 
     universal_newlines=True)
   
   regex = re.search('button\[{0}\]=down'.format(button), result)
@@ -80,7 +79,7 @@ def butonState(button):
 """
 
 """
-def scrollFunction(wheelDir, buttonNum):
+def scrollFunction(wheelDir, buttonNum, mouse_id):
   #mouse.wheel(-1) # <- don't work because desactivated ?
   subprocess.run(["xdotool", "click", wheelDir])
 
@@ -88,21 +87,34 @@ def scrollFunction(wheelDir, buttonNum):
   # We check if the button is actually held down (to
   # determine if this is a TRUE held down gesture all along)
   for i in range(AUTO_SCROLL_STEP):
-    state=butonState(buttonNum)
+    state=butonState(buttonNum, mouse_id)
     if state:
       pass
     else:
       return
   
-  keepLoop=butonState(buttonNum)
+  keepLoop=butonState(buttonNum, mouse_id)
   while keepLoop:
     # set "repeat" flag to control "delay"
     subprocess.run(["xdotool", "click", 
       "--repeat", "1", 
       "--delay", str(AUTO_SCROLL_INTERVAL),
       wheelDir])
-    keepLoop = butonState(buttonNum)
+    keepLoop = butonState(buttonNum, mouse_id)
 
+
+def get_device_id(device_name: str) -> int | None:
+  # run xinput command
+  result = subprocess.run(["xinput", "list"], capture_output=True, text=True)
+  output = result.stdout
+
+  # search row of our peripheral
+  for line in output.splitlines():
+    if device_name in line:
+      match = re.search(r'id=(\d+)', line)
+      if match:
+        return match.group(1)
+  return None
 
 # +------+
 # | MAIN |
@@ -110,6 +122,9 @@ def scrollFunction(wheelDir, buttonNum):
 def main():
   # remove all registered events, just to be sure
   mouse.unhook_all()
+  
+  MOUSE_ID = get_device_id("USB Optical Mouse")
+  print(f"ID found : {MOUSE_ID}")
 
   # Disable default mouse behaviour and
   # control all from this script.
@@ -118,8 +133,8 @@ def main():
   subprocess.run(["xinput set-button-map {0} {1}".format(MOUSE_ID, MOUSE_MAPPING)], shell=True)
   subprocess.run(["xinput", "--get-button-map", MOUSE_ID])
 
-  mouse.on_button(scrollFunction, ("5","8"), 'x', 'down')
-  mouse.on_button(scrollFunction, ("4","9"), 'x2', 'down')
+  mouse.on_button(scrollFunction, args=("5","8",MOUSE_ID), buttons='x', types='down')
+  mouse.on_button(scrollFunction, args=("4","9",MOUSE_ID), buttons='x2', types='down')
 
 
 # enable use of the script as an imported module
