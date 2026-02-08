@@ -5,8 +5,8 @@
 # kill "$(cat mcserver.pid)"
 
 LOG_FILE="mcserver-$(date '+%Y-%m-%d').log"
-JAVA_CMD="./openjdk_25/jdk-25.0.2+10/bin/java"
-JAR="fabric-server-mc.1.21.11-loader.0.18.4-launcher.1.1.1.jar"
+JAVA_CMD="../java-adoptium/jdk-21.0.9+10/bin/java"
+JAR="fabric-server-launch.jar"
 PID_FILE="mcserver.pid"
 
 log() {
