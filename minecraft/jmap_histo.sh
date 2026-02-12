@@ -2,14 +2,13 @@
 
 PID=$1
 INTERVAL=5
-HISTORY=40   # nombre de points affichés
+HISTORY=40
 
 if [ -z "$PID" ]; then
   echo "Usage: $0 <pid>"
   exit 1
 fi
 
-# Buffers historiques
 declare -a USED_HISTORY
 declare -a MAX_HISTORY
 declare -a EDEN_HISTORY
@@ -17,30 +16,56 @@ declare -a SURVIVOR_HISTORY
 declare -a OLD_HISTORY
 declare -a META_HISTORY
 
-function extract_value() {
-  echo "$1" | grep "$2" | awk -F'=' '{print $2}' | awk '{print $1}'
+get_last() {
+  local arr=("$@")
+  local size=${#arr[@]}
+  if [ $size -eq 0 ]; then
+    echo 0
+  else
+    echo "${arr[$((size-1))]}"
+  fi
 }
 
-function collect_metrics() {
+collect_metrics() {
 
-  OUTPUT=$(jhsdb jmap --pid $PID --heap 2>/dev/null)
+  OUTPUT=$(jhsdb jmap --pid "$PID" --heap 2>/dev/null)
 
-  # Heap total
-  USED=$(echo "$OUTPUT" | grep "used =" | head -n 1 | awk '{print $3}')
+  if [ -z "$OUTPUT" ]; then
+    return
+  fi
+
+  # Heap used (première occurrence)
+  USED=$(echo "$OUTPUT" | grep -m1 "used =" | awk '{print $3}')
+
+  # Max heap (MaxHeapSize)
   MAX=$(echo "$OUTPUT" | grep "MaxHeapSize" | awk '{print $3}')
 
-  # Espaces mémoire (selon format JDK)
-  EDEN=$(echo "$OUTPUT" | grep "Eden Space" -A4 | grep "used =" | awk '{print $3}')
-  SURVIVOR=$(echo "$OUTPUT" | grep "Survivor Space" -A4 | grep "used =" | awk '{print $3}' | head -n 1)
-  OLD=$(echo "$OUTPUT" | grep "Old Space" -A4 | grep "used =" | awk '{print $3}')
-  META=$(echo "$OUTPUT" | grep "Metaspace" -A4 | grep "used =" | awk '{print $3}')
+  # Fallback si parsing échoue
+  USED=${USED:-0}
+  MAX=${MAX:-0}
+
+  # Espaces mémoire (tolérant aux variations JDK)
+  EDEN=$(echo "$OUTPUT" | awk '/Eden Space/{f=1} f && /used =/{print $3; f=0}')
+  SURVIVOR=$(echo "$OUTPUT" | awk '/Survivor Space/{f=1} f && /used =/{print $3; f=0}')
+  OLD=$(echo "$OUTPUT" | awk '/Old Space/{f=1} f && /used =/{print $3; f=0}')
+  META=$(echo "$OUTPUT" | awk '/Metaspace/{f=1} f && /used =/{print $3; f=0}')
+
+  EDEN=${EDEN:-0}
+  SURVIVOR=${SURVIVOR:-0}
+  OLD=${OLD:-0}
+  META=${META:-0}
+
+  # Ignore si MAX invalide
+  if ! [[ "$MAX" =~ ^[0-9]+$ ]] || [ "$MAX" -eq 0 ]; then
+    return
+  fi
 
   USED_HISTORY+=($USED)
   MAX_HISTORY+=($MAX)
-  EDEN_HISTORY+=(${EDEN:-0})
-  SURVIVOR_HISTORY+=(${SURVIVOR:-0})
-  OLD_HISTORY+=(${OLD:-0})
-  META_HISTORY+=(${META:-0})
+  EDEN_HISTORY+=($EDEN)
+  SURVIVOR_HISTORY+=($SURVIVOR)
+  OLD_HISTORY+=($OLD)
+  META_HISTORY+=($META)
 
   # Trim historique
   if [ ${#USED_HISTORY[@]} -gt $HISTORY ]; then
@@ -53,49 +78,59 @@ function collect_metrics() {
   fi
 }
 
-function draw_graph() {
+draw_series() {
+
+  local name=$1
+  shift
+  local data=("$@")
+
+  local current_max=$(get_last "${MAX_HISTORY[@]}")
+  [ "$current_max" -eq 0 ] && return
+
+  printf "%-6s |" "$name"
+
+  for value in "${data[@]}"; do
+    if ! [[ "$value" =~ ^[0-9]+$ ]]; then
+      value=0
+    fi
+    height=$((value * 20 / current_max))
+    [ "$height" -gt 20 ] && height=20
+
+    for ((i=0;i<height;i++)); do printf "#"; done
+    printf "."
+  done
+  echo ""
+}
+
+draw_graph() {
 
   clear
+
+  CURRENT_USED=$(get_last "${USED_HISTORY[@]}")
+  CURRENT_MAX=$(get_last "${MAX_HISTORY[@]}")
+
+  if [ "$CURRENT_MAX" -eq 0 ]; then
+    echo "Collecting data..."
+    return
+  fi
+
+  PERCENT=$((100 * CURRENT_USED / CURRENT_MAX))
 
   echo "JVM PID: $PID"
   echo "Interval: ${INTERVAL}s"
   echo ""
-
-  CURRENT_USED=${USED_HISTORY[-1]}
-  CURRENT_MAX=${MAX_HISTORY[-1]}
-  PERCENT=$((100 * CURRENT_USED / CURRENT_MAX))
-
   echo "Heap Used: $((CURRENT_USED/1024/1024)) MB / $((CURRENT_MAX/1024/1024)) MB ($PERCENT%)"
   echo ""
 
-  draw_series "TOTAL" "${USED_HISTORY[@]}" "$CURRENT_MAX"
-  draw_series "EDEN" "${EDEN_HISTORY[@]}" "$CURRENT_MAX"
-  draw_series "SURV" "${SURVIVOR_HISTORY[@]}" "$CURRENT_MAX"
-  draw_series "OLD " "${OLD_HISTORY[@]}" "$CURRENT_MAX"
-  draw_series "META" "${META_HISTORY[@]}" "$CURRENT_MAX"
-}
-
-function draw_series() {
-
-  NAME=$1
-  shift
-  DATA=("$@")
-  SCALE=$CURRENT_MAX
-
-  printf "%-6s |" "$NAME"
-
-  for value in "${DATA[@]}"; do
-    HEIGHT=$((value * 20 / SCALE))
-    if [ "$HEIGHT" -gt 20 ]; then HEIGHT=20; fi
-    printf "%0.s#" $(seq 1 $HEIGHT)
-    printf "."
-  done
-
-  echo ""
+  draw_series "TOTAL" "${USED_HISTORY[@]}"
+  draw_series "EDEN"  "${EDEN_HISTORY[@]}"
+  draw_series "SURV"  "${SURVIVOR_HISTORY[@]}"
+  draw_series "OLD"   "${OLD_HISTORY[@]}"
+  draw_series "META"  "${META_HISTORY[@]}"
 }
 
 while true; do
   collect_metrics
   draw_graph
-  sleep $INTERVAL
+  sleep "$INTERVAL"
 done
