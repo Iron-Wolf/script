@@ -1,136 +1,98 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-PID=$1
-INTERVAL=5
-HISTORY=40
+PID="$1"
 
 if [ -z "$PID" ]; then
-  echo "Usage: $0 <pid>"
+  echo "Usage: $0 <PID>"
   exit 1
 fi
 
-declare -a USED_HISTORY
-declare -a MAX_HISTORY
-declare -a EDEN_HISTORY
-declare -a SURVIVOR_HISTORY
-declare -a OLD_HISTORY
-declare -a META_HISTORY
+JCMD="./java-adoptium/jdk-21.0.9+10/bin/jcmd"
+CMD="$JCMD $PID GC.heap_info"
 
-get_last() {
-  local arr=("$@")
-  local size=${#arr[@]}
-  if [ $size -eq 0 ]; then
-    echo 0
-  else
-    echo "${arr[$((size-1))]}"
-  fi
+HISTORY_FILE="/tmp/java_heap_${PID}.hist"
+MAX_POINTS=30
+
+draw_bar() {
+  local percent=$1
+  local width=30
+  local filled=$((percent * width / 100))
+  local empty=$((width - filled))
+
+  printf "["
+  printf "%0.s#" $(seq 1 $filled)
+  printf "%0.s-" $(seq 1 $empty)
+  printf "] %3d%%" "$percent"
 }
 
-collect_metrics() {
+sparkline() {
+  local values=("$@")
+  local chars=(▁ ▂ ▃ ▄ ▅ ▆ ▇ █)
 
-  OUTPUT=$(jhsdb jmap --pid "$PID" --heap 2>/dev/null)
-
-  if [ -z "$OUTPUT" ]; then
-    return
-  fi
-
-  # Heap used (première occurrence)
-  USED=$(echo "$OUTPUT" | grep -m1 "used =" | awk '{print $3}')
-
-  # Max heap (MaxHeapSize)
-  MAX=$(echo "$OUTPUT" | grep "MaxHeapSize" | awk '{print $3}')
-
-  # Fallback si parsing échoue
-  USED=${USED:-0}
-  MAX=${MAX:-0}
-
-  # Espaces mémoire (tolérant aux variations JDK)
-  EDEN=$(echo "$OUTPUT" | awk '/Eden Space/{f=1} f && /used =/{print $3; f=0}')
-  SURVIVOR=$(echo "$OUTPUT" | awk '/Survivor Space/{f=1} f && /used =/{print $3; f=0}')
-  OLD=$(echo "$OUTPUT" | awk '/Old Space/{f=1} f && /used =/{print $3; f=0}')
-  META=$(echo "$OUTPUT" | awk '/Metaspace/{f=1} f && /used =/{print $3; f=0}')
-
-  EDEN=${EDEN:-0}
-  SURVIVOR=${SURVIVOR:-0}
-  OLD=${OLD:-0}
-  META=${META:-0}
-
-  # Ignore si MAX invalide
-  if ! [[ "$MAX" =~ ^[0-9]+$ ]] || [ "$MAX" -eq 0 ]; then
-    return
-  fi
-
-  USED_HISTORY+=($USED)
-  MAX_HISTORY+=($MAX)
-  EDEN_HISTORY+=($EDEN)
-  SURVIVOR_HISTORY+=($SURVIVOR)
-  OLD_HISTORY+=($OLD)
-  META_HISTORY+=($META)
-
-  # Trim historique
-  if [ ${#USED_HISTORY[@]} -gt $HISTORY ]; then
-    USED_HISTORY=("${USED_HISTORY[@]:1}")
-    MAX_HISTORY=("${MAX_HISTORY[@]:1}")
-    EDEN_HISTORY=("${EDEN_HISTORY[@]:1}")
-    SURVIVOR_HISTORY=("${SURVIVOR_HISTORY[@]:1}")
-    OLD_HISTORY=("${OLD_HISTORY[@]:1}")
-    META_HISTORY=("${META_HISTORY[@]:1}")
-  fi
-}
-
-draw_series() {
-
-  local name=$1
-  shift
-  local data=("$@")
-
-  local current_max=$(get_last "${MAX_HISTORY[@]}")
-  [ "$current_max" -eq 0 ] && return
-
-  printf "%-6s |" "$name"
-
-  for value in "${data[@]}"; do
-    if ! [[ "$value" =~ ^[0-9]+$ ]]; then
-      value=0
-    fi
-    height=$((value * 20 / current_max))
-    [ "$height" -gt 20 ] && height=20
-
-    for ((i=0;i<height;i++)); do printf "#"; done
-    printf "."
+  for v in "${values[@]}"; do
+    idx=$((v * 7 / 100))
+    printf "%s" "${chars[$idx]}"
   done
-  echo ""
 }
 
-draw_graph() {
+OUTPUT=$($CMD 2>/dev/null)
 
-  clear
+TOTAL_K=$(echo "$OUTPUT" | awk '/garbage-first heap/ {gsub(/K,?/,"",$4); print $4}')
+USED_K=$(echo "$OUTPUT"  | awk '/garbage-first heap/ {gsub(/K,?/,"",$6); print $6}')
+YOUNG_K=$(echo "$OUTPUT" | awk -F'[()]' '/young/ {gsub(/K/,"",$2); print $2}')
+META_USED_K=$(echo "$OUTPUT"  | awk '/Metaspace/ {gsub(/K,?/,"",$3); print $3}')
+META_COMMIT_K=$(echo "$OUTPUT" | awk '/Metaspace/ {gsub(/K,?/,"",$5); print $5}')
 
-  CURRENT_USED=$(get_last "${USED_HISTORY[@]}")
-  CURRENT_MAX=$(get_last "${MAX_HISTORY[@]}")
+TOTAL_K=${TOTAL_K:-1}
+USED_K=${USED_K:-0}
+YOUNG_K=${YOUNG_K:-0}
+META_USED_K=${META_USED_K:-0}
+META_COMMIT_K=${META_COMMIT_K:-1}
 
-  if [ "$CURRENT_MAX" -eq 0 ]; then
-    echo "Collecting data..."
-    return
-  fi
+HEAP_PERCENT=$((USED_K * 100 / TOTAL_K))
+YOUNG_PERCENT=$((YOUNG_K * 100 / TOTAL_K))
+META_PERCENT=$((META_USED_K * 100 / META_COMMIT_K))
 
-  PERCENT=$((100 * CURRENT_USED / CURRENT_MAX))
+TOTAL_MB=$((TOTAL_K / 1024))
+USED_MB=$((USED_K / 1024))
+YOUNG_MB=$((YOUNG_K / 1024))
+META_MB=$((META_USED_K / 1024))
+META_COMMIT_MB=$((META_COMMIT_K / 1024))
 
-  echo "JVM PID: $PID"
-  echo "Interval: ${INTERVAL}s"
-  echo ""
-  echo "Heap Used: $((CURRENT_USED/1024/1024)) MB / $((CURRENT_MAX/1024/1024)) MB ($PERCENT%)"
-  echo ""
+# =============================
+# Historique Heap %
+# =============================
 
-  draw_series "TOTAL" "${USED_HISTORY[@]}"
-  draw_series "EDEN"  "${EDEN_HISTORY[@]}"
-  draw_series "SURV"  "${SURVIVOR_HISTORY[@]}"
-  draw_series "OLD"   "${OLD_HISTORY[@]}"
-  draw_series "META"  "${META_HISTORY[@]}"
-}
+echo "$HEAP_PERCENT" >> "$HISTORY_FILE"
+tail -n $MAX_POINTS "$HISTORY_FILE" > "${HISTORY_FILE}.tmp"
+mv "${HISTORY_FILE}.tmp" "$HISTORY_FILE"
 
-while true; do
-  collect_metrics
-  draw_graph
-  sleep "$INTERVAL"
-done
+mapfile -t HISTORY < "$HISTORY_FILE"
+
+# =============================
+# Affichage
+# =============================
+
+echo "Command executed:"
+echo "$CMD"
+echo
+echo "Timestamp: $(date +"%Y-%m-%d %H:%M:%S")"
+echo "PID: $PID"
+echo "============================================================"
+echo
+
+printf "Heap Used     : %4d MB / %4d MB  " "$USED_MB" "$TOTAL_MB"
+draw_bar $HEAP_PERCENT
+echo
+
+printf "Young Gen     : %4d MB            " "$YOUNG_MB"
+draw_bar $YOUNG_PERCENT
+echo
+
+printf "Metaspace     : %4d MB / %4d MB  " "$META_MB" "$META_COMMIT_MB"
+draw_bar $META_PERCENT
+echo
+echo
+echo "Heap Trend (last $MAX_POINTS samples)"
+sparkline "${HISTORY[@]}"
+echo
