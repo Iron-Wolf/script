@@ -11,7 +11,9 @@ JCMD="./java-adoptium/jdk-21.0.9+10/bin/jcmd"
 CMD="$JCMD $PID GC.heap_info"
 
 HISTORY_FILE="/tmp/java_heap_${PID}.hist"
+FGC_FILE="/tmp/java_heap_${PID}.fgc"
 MAX_POINTS=30
+FGC_THRESHOLD=15   # % drop to detect Full GC
 
 draw_bar() {
   local percent=$1
@@ -60,14 +62,30 @@ META_MB=$((META_USED_K / 1024))
 META_COMMIT_MB=$((META_COMMIT_K / 1024))
 
 # =============================
-# Historique Heap %
+# Historique & détection FGC
 # =============================
+
+PREV=0
+if [ -f "$HISTORY_FILE" ]; then
+  PREV=$(tail -n 1 "$HISTORY_FILE")
+fi
+
+DROP=$((PREV - HEAP_PERCENT))
+FGC_DETECTED=0
+
+if [ "$DROP" -gt "$FGC_THRESHOLD" ]; then
+  FGC_DETECTED=1
+  echo "$(date +"%H:%M:%S") - Drop ${DROP}% (Full GC suspected)" >> "$FGC_FILE"
+fi
 
 echo "$HEAP_PERCENT" >> "$HISTORY_FILE"
 tail -n $MAX_POINTS "$HISTORY_FILE" > "${HISTORY_FILE}.tmp"
 mv "${HISTORY_FILE}.tmp" "$HISTORY_FILE"
 
 mapfile -t HISTORY < "$HISTORY_FILE"
+
+FGC_COUNT=0
+[ -f "$FGC_FILE" ] && FGC_COUNT=$(wc -l < "$FGC_FILE")
 
 # =============================
 # Affichage
@@ -93,6 +111,14 @@ printf "Metaspace     : %4d MB / %4d MB  " "$META_MB" "$META_COMMIT_MB"
 draw_bar $META_PERCENT
 echo
 echo
+
 echo "Heap Trend (last $MAX_POINTS samples)"
 sparkline "${HISTORY[@]}"
 echo
+echo
+
+if [ "$FGC_DETECTED" -eq 1 ]; then
+  echo "🔥 FULL GC DETECTED (drop ${DROP}%)"
+fi
+
+echo "Full GC detected since start: $FGC_COUNT"
