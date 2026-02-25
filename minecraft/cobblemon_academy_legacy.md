@@ -19,13 +19,24 @@
 - reset chest content : `/lootr clear <player>`
 
 ## Cobblemon
-### Spawn rate
-- wiki : https://wiki.cobblemon.com/index.php/Tutorials/Creating_Custom_Spawns
-- file location : `~/cobblemon-academy-legacy-1.4.1/datapacks/Ac
-ademy/data/cobblemon/spawn_pool_world/`
+### Spawn rule
+One shot rule (one pokemon at a time) :
+  - wiki : https://wiki.cobblemon.com/index.php/Tutorials/Creating_Custom_Spawns
+  - Gitlab : https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/resources/data/cobblemon/spawn_pool_world
+  - files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/cobblemon/spawn_pool_world/`
 
-### loot items
-...
+Globa rules (mass modification) :
+  - wiki : https://wiki.cobblemon.com/index.php/Spawn_Rules
+  - Gitlab : https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/resources/data/cobblemon/spawn_rules
+  - files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/cobblemon/spawn_rules/`
 
-### Shiny rate
-...
+### Item drop
+- wiki : https://wiki.cobblemon.com/index.php/Pok%C3%A9mon/Drops
+- gitlab : https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/resources/data/cobblemon/species
+- files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/cobblemon/species/`
+
+### Main conf
+- wiki : https://wiki.cobblemon.com/index.php/Config
+- files : `~/cobblemon-academy-legacy-1.4.1/config/cobblemon/main.json`
+
+
