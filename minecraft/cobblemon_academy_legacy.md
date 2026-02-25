@@ -29,6 +29,8 @@ Globa rules (mass modification) :
   - wiki : https://wiki.cobblemon.com/index.php/Spawn_Rules
   - Gitlab : https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/resources/data/cobblemon/spawn_rules
   - files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/cobblemon/spawn_rules/`
+    - use the modified [MoLang](https://wiki.cobblemon.com/index.php/Molang) functions, to filter pokemon
+    - Kotlin [source](https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/kotlin/com/cobblemon/mod/common/api/spawning/rules/component) for the authorized fields, in each component
 
 ### Item drop
 - wiki : https://wiki.cobblemon.com/index.php/Pok%C3%A9mon/Drops
