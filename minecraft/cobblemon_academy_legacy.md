@@ -31,6 +31,31 @@ Globa rules (mass modification) :
   - files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/cobblemon/spawn_rules/`
     - use the modified [MoLang](https://wiki.cobblemon.com/index.php/Molang) functions, to filter pokemon
     - Kotlin [source](https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/kotlin/com/cobblemon/mod/common/api/spawning/rules/component) for the authorized fields, in each component
+<details>
+  <summary>test.json</summary>
+  
+```json  
+{
+  "displayName": "Test",
+  "enabled": "true",
+  "components": [ 
+    {
+      "type": "weight",
+      "spawnSelector": "v.spawn.pokemon.species.name == 'pidgey'",
+      "contextSelector": "v.context.biome.is_in('#cobblemon:is_overworld')",
+      "weight": "v.weight * 10000"
+    },
+    {
+      "type": "weight",
+      "spawnSelector": "v.spawn.pokemon.species.name == 'pikachu'", <- watch out with the bucket of the pokemon !
+      "contextSelector": "v.context.biome.is_in('#cobblemon:is_overworld')",
+      "weight": "v.weight * 10000"
+    }
+  ]
+}
+```
+
+</details>
 
 ### Item drop
 - wiki : https://wiki.cobblemon.com/index.php/Pok%C3%A9mon/Drops
