@@ -18,10 +18,6 @@
 ## Lootr
 - reset chest content : `/lootr clear <player>`
 
-### chest loot config
-- files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/academy/loot_table`
-  - modify the "tier" config file, in thoses directories : basic, basic_gym, basic_meteor, basic_underground
-
 ## Cobblemon
 ### Spawn rule
 One shot rule (one pokemon at a time) :
@@ -91,11 +87,18 @@ Globa rules (mass modification) :
 - gitlab : https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/resources/data/cobblemon/species
 - files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/cobblemon/species/`
 
+### chest loot config
+- files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/academy/loot_table`
+  - modify the "tier" config file, in thoses directories : basic, basic_gym, basic_meteor, basic_underground
+
+### recipe (gym key) - NEED TEST
+- files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/rad_gyms/recipe`
+
 ### Main conf
 - wiki : https://wiki.cobblemon.com/index.php/Config
 - files : `~/cobblemon-academy-legacy-1.4.1/config/cobblemon/main.json`
 
-### NPC conf
+### NPC conf - NEED TEST
 - files : `~/cobblemon-academy-legacy-1.4.1/config/academy/npc.json`
   - configure Safari cost
 
