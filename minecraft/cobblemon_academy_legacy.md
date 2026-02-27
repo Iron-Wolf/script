@@ -24,6 +24,32 @@ One shot rule (one pokemon at a time) :
   - wiki : https://wiki.cobblemon.com/index.php/Tutorials/Creating_Custom_Spawns
   - Gitlab : https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/resources/data/cobblemon/spawn_pool_world
   - files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/cobblemon/spawn_pool_world/`
+<details>
+  <summary>📝 test.json</summary>
+  
+```json  
+{
+  "enabled": false, <- not working !
+  "neededInstalledMods": [],
+  "neededUninstalledMods": [],
+  "spawns": [
+    {
+      "id": "arceus-1",
+      "pokemon": "arceus",
+      "presets": [
+        "natural"
+      ],
+      "type": "pokemon",
+      "context": "grounded",
+      "bucket": "common",
+      "level": "50-60",
+      "weight": 999.0,
+      "condition": {}
+    }
+  ]
+}
+```
+</details>
 
 Globa rules (mass modification) :
   - wiki : https://wiki.cobblemon.com/index.php/Spawn_Rules
@@ -32,7 +58,7 @@ Globa rules (mass modification) :
     - use the modified [MoLang](https://wiki.cobblemon.com/index.php/Molang) functions, to filter pokemon
     - Kotlin [source](https://gitlab.com/cable-mc/cobblemon/-/tree/main/common/src/main/kotlin/com/cobblemon/mod/common/api/spawning/rules/component) for the authorized fields, in each component
 <details>
-  <summary>test.json</summary>
+  <summary>📝 test.json</summary>
   
 ```json  
 {
@@ -54,7 +80,6 @@ Globa rules (mass modification) :
   ]
 }
 ```
-
 </details>
 
 ### Item drop
