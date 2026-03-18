@@ -90,6 +90,7 @@ Globa rules (mass modification) :
 ### chest loot config
 - files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/academy/loot_table`
   - modify the "tier" config file, in thoses directories : basic, basic_gym, basic_meteor, basic_underground
+- OR ? : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/cobblemon/loot_table/injection/chests`
 
 ### recipe (gym key) - NEED TEST
 - files : `~/cobblemon-academy-legacy-1.4.1/datapacks/Academy/data/rad_gyms/recipe`
