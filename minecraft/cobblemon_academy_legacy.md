@@ -5,6 +5,7 @@
 - Work with Java 21 : https://adoptium.net/fr/temurin/releases
   - Take the LTS version
 - just start the fabric jar with the JDK
+  - of, manage it with : https://craftycontrol.com
 
 
 # Links
