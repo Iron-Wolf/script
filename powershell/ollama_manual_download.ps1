@@ -6,8 +6,8 @@
 # direct download : https://ollama-direct-downloader.vercel.app/
 
 # get proxy info with : Get-ItemProperty -Path "Registry::HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
-# download "pac" file :  http://srvconfigie.encara.local.ads/pack/proxyNG.pac
-$proxyUrl = "http://internetNG.encara.local.ads:8080"
+# download "pac" file :  http://...local.ads/pack/proxyNG.pac
+$proxyUrl = "http://...local.ads:8080"
 
 # Run with        : .\ollama.exe run tinyllama:latest
 
