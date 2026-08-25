@@ -87,4 +87,8 @@ Délivre des [performances similaires](https://www.phoronix.com/review/nvidia-r5
 2024-03-20: Nova (annonce) #driver
 Driver open source développé par Red Hat.
 [Source](https://www.gamingonlinux.com/2024/03/nova-a-rust-based-linux-driver-for-nvidia-gpus-announced/)
+
+2026-01-13: Wine 11.0 stable #driver
+Ajout de NTSync et WoW64 !
+[Source](https://www.xda-developers.com/wine-11-rewrites-linux-runs-windows-games-speed-gains/)
 endSection
